@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ramo's Humidor Watchlist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0e0c0a;
+    --bg-card: #16130f;
+    --bg-elevated: #1d1915;
+    --bg-input: #211c17;
+    --border: #2a241e;
+    --border-strong: #3a3128;
+    --text-primary: #f5ead8;
+    --text-secondary: #b8a98f;
+    --text-muted: #7a6e5a;
+    --accent: #c9a96e;
+    --accent-hover: #dcbb7a;
+    --accent-dim: #8a7548;
+    --success: #7fa66f;
+    --warning: #d4a04a;
+    --danger: #c4634c;
+    --legendary: #d4af37;
+    --banger: #c9a96e;
+    --solid: #9c8b6e;
+    --hmm: #8a7e6a;
+    --no: #a05c4e;
+    --dafuk: #6b3a32;
+    --display-font: 'Playfair Display', Georgia, serif;
+    --body-font: 'Inter', -apple-system, sans-serif;
+    --mono-font: 'JetBrains Mono', 'SF Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg-deep);
+    background-image:
+      radial-gradient(circle at 20% 0%, rgba(201, 169, 110, 0.06) 0%, transparent 50%),
+      radial-gradient(circle at 80% 100%, rgba(122, 110, 90, 0.05) 0%, transparent 50%);
+    color: var(--text-primary);
+    font-family: var(--body-font);
+    min-height: 100vh;
+    line-height: 1.5;
+    padding: 32px 24px 80px;
+  }
+
+  .container { max-width: 1400px; margin: 0 auto; }
+
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .header-title h1 {
+    font-family: var(--display-font);
+    font-size: 38px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
+  .header-title h1 em {
+    color: var(--accent);
+    font-style: italic;
+  }
+  .header-title p {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-top: 6px;
+    letter-spacing: 0.3px;
+  }
+  .fx-display {
+    text-align: right;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 18px;
+    min-width: 220px;
+  }
+  .fx-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .fx-rate {
+    font-family: var(--mono-font);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .fx-time {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    font-family: var(--mono-font);
+  }
+  .fx-refresh {
+    background: none;
+    border: 1px solid var(--border-strong);
+    color: var(--accent);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    cursor: pointer;
+    margin-top: 6px;
+    font-family: var(--body-font);
+    transition: all 0.2s;
+  }
+  .fx-refresh:hover { background: var(--accent); color: var(--bg-deep); }
+
+  /* Budget panel */
+  .budget-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 32px;
+  }
+  .budget-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 24px;
+    align-items: center;
+  }
+  .budget-input-group { display: flex; flex-direction: column; gap: 8px; }
+  .budget-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-secondary);
+  }
+  .budget-input-wrap {
+    display: flex;
+    align-items: center;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0 12px;
+    transition: border-color 0.2s;
+  }
+  .budget-input-wrap:focus-within { border-color: var(--accent); }
+  .budget-input-prefix {
+    font-family: var(--mono-font);
+    color: var(--text-muted);
+    padding-right: 8px;
+  }
+  .budget-input-wrap input {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    padding: 10px 0;
+    font-family: var(--mono-font);
+    font-size: 16px;
+    font-weight: 500;
+    flex: 1;
+    outline: none;
+    width: 100%;
+  }
+
+  .progress-section { display: flex; flex-direction: column; gap: 10px; }
+  .progress-stats {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono-font);
+    font-size: 13px;
+  }
+  .progress-stats .spent { color: var(--text-primary); }
+  .progress-stats .remaining { color: var(--text-secondary); }
+  .progress-bar {
+    height: 10px;
+    background: var(--bg-input);
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-dim), var(--accent));
+    transition: width 0.4s ease, background 0.3s;
+    border-radius: 5px;
+  }
+  .progress-fill.over { background: linear-gradient(90deg, var(--warning), var(--danger)); }
+
+  /* Section */
+  .section-title {
+    font-family: var(--display-font);
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Add form */
+  .add-form {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 32px;
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .form-grid.full { grid-template-columns: 1fr; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+  .field input, .field select, .field textarea {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    color: var(--text-primary);
+    font-family: var(--body-font);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); }
+  .field input[type="number"], .field .num { font-family: var(--mono-font); }
+  .field textarea { resize: vertical; min-height: 60px; font-family: var(--body-font); }
+  .field select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23b8a98f' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+  }
+  .form-actions { display: flex; gap: 12px; margin-top: 20px; justify-content: flex-end; }
+  .btn {
+    padding: 10px 22px;
+    border-radius: 6px;
+    border: none;
+    font-family: var(--body-font);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg-deep);
+  }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-strong);
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-danger {
+    background: transparent;
+    color: var(--danger);
+    border: 1px solid var(--danger);
+  }
+  .btn-danger:hover { background: var(--danger); color: var(--bg-deep); }
+  .btn-icon {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px 8px;
+    font-size: 14px;
+    transition: color 0.2s;
+  }
+  .btn-icon:hover { color: var(--accent); }
+  .btn-icon.danger:hover { color: var(--danger); }
+
+  /* Filters bar */
+  .filters {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 14px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .filter-group { display: flex; align-items: center; gap: 8px; }
+  .filter-group label {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+  .filter-group select {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 6px 28px 6px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 12 8'%3E%3Cpath fill='%23b8a98f' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+  }
+  .count-badge {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: var(--mono-font);
+  }
+
+  /* Cards */
+  .cards { display: grid; gap: 16px; }
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    transition: border-color 0.2s, transform 0.2s;
+    position: relative;
+  }
+  .card:hover { border-color: var(--border-strong); }
+  .card.status-bought { opacity: 0.55; }
+  .card.status-ready { border-left: 3px solid var(--success); }
+
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .card-title-block { flex: 1; min-width: 200px; }
+  .card-title {
+    font-family: var(--display-font);
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .card-meta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .card-meta span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card-meta .retailer { color: var(--accent); }
+
+  .card-actions { display: flex; gap: 4px; align-items: center; }
+  .status-pill {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-strong);
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-family: var(--body-font);
+    transition: all 0.2s;
+  }
+  .status-pill.watching { color: var(--text-secondary); }
+  .status-pill.ready { color: var(--success); border-color: var(--success); }
+  .status-pill.bought { color: var(--text-muted); }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px 24px;
+    padding: 14px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .stat { display: flex; flex-direction: column; gap: 4px; }
+  .stat-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--text-muted);
+  }
+  .stat-value {
+    font-family: var(--mono-font);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  .stat-value.accent { color: var(--accent); }
+  .stat-value.success { color: var(--success); }
+  .stat-value.warning { color: var(--warning); }
+  .stat-value.muted { color: var(--text-muted); font-size: 13px; }
+  .stat-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: var(--mono-font);
+  }
+
+  .rating-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-family: var(--body-font);
+  }
+  .rating-pill.legendary { background: rgba(212, 175, 55, 0.15); color: var(--legendary); border: 1px solid rgba(212, 175, 55, 0.4); }
+  .rating-pill.banger { background: rgba(201, 169, 110, 0.15); color: var(--banger); border: 1px solid rgba(201, 169, 110, 0.4); }
+  .rating-pill.solid { background: rgba(156, 139, 110, 0.15); color: var(--solid); border: 1px solid rgba(156, 139, 110, 0.4); }
+  .rating-pill.hmm { background: rgba(138, 126, 106, 0.15); color: var(--hmm); border: 1px solid rgba(138, 126, 106, 0.4); }
+  .rating-pill.no { background: rgba(160, 92, 78, 0.15); color: var(--no); border: 1px solid rgba(160, 92, 78, 0.4); }
+  .rating-pill.dafuk { background: rgba(107, 58, 50, 0.15); color: var(--dafuk); border: 1px solid rgba(107, 58, 50, 0.4); }
+  .rating-pill.unrated { background: var(--bg-input); color: var(--text-muted); border: 1px solid var(--border); }
+
+  .card-extras {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding-top: 14px;
+  }
+  .extra-block { display: flex; flex-direction: column; gap: 6px; }
+  .extra-block .label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--text-muted);
+  }
+  .extra-block .content {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    font-style: italic;
+    font-family: var(--display-font);
+  }
+  .extra-block .content.empty {
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 80px 24px;
+    color: var(--text-muted);
+    background: var(--bg-card);
+    border: 1px dashed var(--border-strong);
+    border-radius: 12px;
+  }
+  .empty-state h3 {
+    font-family: var(--display-font);
+    font-size: 22px;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+  }
+  .empty-state p { font-size: 13px; }
+
+  /* Totals */
+  .totals-bar {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-strong);
+    border-radius: 12px;
+    padding: 20px 28px;
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 24px;
+  }
+  .total-cell { display: flex; flex-direction: column; gap: 4px; }
+  .total-cell .label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+  }
+  .total-cell .value {
+    font-family: var(--mono-font);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .total-cell .value.accent { color: var(--accent); }
+  .total-cell .sub {
+    font-family: var(--mono-font);
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 24px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border-strong);
+    border-radius: 12px;
+    max-width: 700px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 28px;
+  }
+  .modal h2 {
+    font-family: var(--display-font);
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: var(--accent);
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--bg-elevated);
+    border: 1px solid var(--accent);
+    color: var(--text-primary);
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    transition: transform 0.3s ease;
+    z-index: 200;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* Settings icon button (top right of header) */
+  .header-tools {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .settings-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 18px;
+    position: relative;
+  }
+  .settings-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .settings-btn.has-status::after {
+    content: '';
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--success);
+  }
+  .settings-btn.has-status.error::after { background: var(--danger); }
+  .settings-btn.has-status.empty::after { background: var(--warning); }
+
+  /* Database status block (inside settings modal) */
+  .db-status {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .db-status-info { display: flex; flex-direction: column; gap: 2px; }
+  .db-status-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--text-muted);
+  }
+  .db-status-value {
+    font-family: var(--mono-font);
+    font-size: 13px;
+    color: var(--text-primary);
+  }
+  .db-status-value.success { color: var(--success); }
+  .db-status-value.error { color: var(--danger); }
+  .db-status-value.empty { color: var(--warning); }
+  .db-status .stat-sub { font-size: 11px; color: var(--text-muted); font-family: var(--mono-font); }
+
+  /* Autocomplete dropdown */
+  .autocomplete-wrap { position: relative; }
+  .autocomplete-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    margin-top: 4px;
+    max-height: 240px;
+    overflow-y: auto;
+    z-index: 50;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    display: none;
+  }
+  .autocomplete-list.active { display: block; }
+  .autocomplete-item {
+    padding: 10px 14px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  .autocomplete-item:last-child { border-bottom: none; }
+  .autocomplete-item:hover, .autocomplete-item.highlighted {
+    background: var(--bg-input);
+  }
+  .autocomplete-name {
+    font-size: 13px;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+  }
+  .autocomplete-meta {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .autocomplete-tier-pill {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 8px;
+    font-size: 9px;
+    font-weight: 600;
+    background: var(--accent);
+    color: var(--bg-deep);
+  }
+
+  /* Cigar Collective tier pill */
+  .cc-tier-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-family: var(--body-font);
+    background: var(--bg-input);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-strong);
+    margin-left: 6px;
+  }
+  .cc-tier-pill .cc-prefix {
+    font-size: 9px;
+    color: var(--text-muted);
+    margin-right: 5px;
+    letter-spacing: 1px;
+  }
+
+  /* MATCH GLOW: when user rating tier == CC tier */
+  .rating-pill.aligned, .cc-tier-pill.aligned {
+    animation: alignedPulse 2.5s ease-in-out infinite;
+    border-color: var(--accent) !important;
+    background: rgba(201, 169, 110, 0.25) !important;
+    color: var(--accent) !important;
+    box-shadow: 0 0 12px rgba(201, 169, 110, 0.35);
+  }
+  @keyframes alignedPulse {
+    0%, 100% { box-shadow: 0 0 8px rgba(201, 169, 110, 0.3); }
+    50% { box-shadow: 0 0 18px rgba(201, 169, 110, 0.6); }
+  }
+  .alignment-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    margin-left: 8px;
+    font-weight: 600;
+  }
+  .alignment-badge::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--accent);
+    animation: alignedPulse 2.5s ease-in-out infinite;
+  }
+
+  /* Disabled / readonly state for auto-filled fields */
+  .field.auto-filled input,
+  .field.auto-filled textarea {
+    background: rgba(201, 169, 110, 0.05);
+    border-color: var(--accent-dim);
+  }
+  .field-badge {
+    display: inline-block;
+    margin-left: 8px;
+    font-size: 9px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+
+  @media (max-width: 700px) {
+    body { padding: 20px 14px 60px; }
+    .header { flex-direction: column; align-items: stretch; }
+    .header-title h1 { font-size: 28px; }
+    .fx-display { text-align: left; }
+    .budget-row { grid-template-columns: 1fr; }
+    .card-extras { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-title">
+      <h1>Ramo's <em>Humidor</em> Watchlist</h1>
+      <p>Track. Compare. Pull the trigger at the right time.</p>
+    </div>
+    <div class="header-tools">
+      <div class="fx-display">
+        <div class="fx-label">USD &rarr; ZAR</div>
+        <div class="fx-rate" id="fx-rate">Loading...</div>
+        <div class="fx-time" id="fx-time"></div>
+        <button class="fx-refresh" onclick="loadFXRate()">Refresh</button>
+      </div>
+      <button class="settings-btn" id="settings-btn" onclick="openSettingsModal()" title="Settings &amp; ratings database">&#9881;</button>
+    </div>
+  </div>
+
+  <!-- Budget Panel -->
+  <div class="budget-panel">
+    <div class="budget-row">
+      <div class="budget-input-group">
+        <span class="budget-label">Budget</span>
+        <div class="budget-input-wrap">
+          <span class="budget-input-prefix">R</span>
+          <input type="number" id="budget-zar" placeholder="0.00" step="100" oninput="updateBudget()">
+        </div>
+        <span class="stat-sub" id="budget-usd">= $0.00 USD</span>
+      </div>
+      <div class="progress-section">
+        <div class="progress-stats">
+          <span>Landed cost <span class="spent" id="spent-display">R 0.00</span></span>
+          <span>Remaining <span class="remaining" id="remaining-display">R 0.00</span></span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+        </div>
+        <span class="stat-sub" id="progress-pct">0% of budget used</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Form Toggle -->
+  <h2 class="section-title">Watchlist</h2>
+
+  <!-- Filters -->
+  <div class="filters">
+    <div class="filter-group">
+      <label>Status</label>
+      <select id="filter-status" onchange="render()">
+        <option value="all">All</option>
+        <option value="watching">Watching</option>
+        <option value="ready">Ready to buy</option>
+        <option value="bought">Bought</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Retailer</label>
+      <select id="filter-retailer" onchange="render()">
+        <option value="all">All</option>
+        <option value="COH Cigars">COH Cigars</option>
+        <option value="Atlantic Cigar Company">Atlantic Cigar</option>
+        <option value="Luxury Cigar Club">Luxury Cigar Club</option>
+        <option value="I Heart Cigars">I Heart Cigars</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>My Rating</label>
+      <select id="filter-rating" onchange="render()">
+        <option value="all">All</option>
+        <option value="Legendary">Legendary</option>
+        <option value="Banger">Banger</option>
+        <option value="Solid">Solid</option>
+        <option value="Hmm... ok">Hmm... ok</option>
+        <option value="No thanks">No thanks</option>
+        <option value="Dafuk?!">Dafuk?!</option>
+        <option value="unrated">Unrated</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Sort</label>
+      <select id="filter-sort" onchange="render()">
+        <option value="added-desc">Recently added</option>
+        <option value="value">Best value (rating &times; discount)</option>
+        <option value="discount">Highest discount %</option>
+        <option value="price-asc">Landed cost: low to high</option>
+        <option value="price-desc">Landed cost: high to low</option>
+        <option value="per-stick">Lowest per-stick cost</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" style="margin-left:auto" onclick="openAddModal()">+ Add Cigar</button>
+  </div>
+
+  <div class="count-badge" id="count-badge"></div>
+
+  <!-- Cards -->
+  <div class="cards" id="cards"></div>
+
+  <!-- Totals -->
+  <div class="totals-bar" id="totals-bar" style="display:none">
+    <div class="total-cell">
+      <span class="label">Items</span>
+      <span class="value" id="total-items">0</span>
+      <span class="sub" id="total-sticks">0 sticks</span>
+    </div>
+    <div class="total-cell">
+      <span class="label">Subtotal (USD)</span>
+      <span class="value" id="total-usd">$0.00</span>
+      <span class="sub">excl. shipping &amp; tax</span>
+    </div>
+    <div class="total-cell">
+      <span class="label">Shipping uplift</span>
+      <span class="value" id="total-shipping">$0.00</span>
+      <span class="sub">30% for US retailers</span>
+    </div>
+    <div class="total-cell">
+      <span class="label">Landed (USD)</span>
+      <span class="value accent" id="total-landed-usd">$0.00</span>
+      <span class="sub">all-in</span>
+    </div>
+    <div class="total-cell">
+      <span class="label">Landed (ZAR)</span>
+      <span class="value accent" id="total-landed-zar">R 0.00</span>
+      <span class="sub" id="total-fx-note">at current FX</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h2 id="modal-title">Add Cigar</h2>
+    <div class="form-grid">
+      <div class="field" style="grid-column: 1 / -1">
+        <label>Cigar (brand, blend, vitola) <span class="field-badge" id="match-badge" style="display:none">Matched from database</span></label>
+        <div class="autocomplete-wrap">
+          <input type="text" id="f-cigar" placeholder="e.g. Padron 1964 Anniversary Exclusivo" autocomplete="off" oninput="onCigarInput()" onfocus="onCigarInput()" onblur="setTimeout(hideAutocomplete, 200)" onkeydown="onCigarKeydown(event)">
+          <div class="autocomplete-list" id="autocomplete-list"></div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Retailer</label>
+        <select id="f-retailer">
+          <option value="COH Cigars">COH Cigars (Hong Kong)</option>
+          <option value="Atlantic Cigar Company">Atlantic Cigar Company (US)</option>
+          <option value="Luxury Cigar Club">Luxury Cigar Club (US)</option>
+          <option value="I Heart Cigars">I Heart Cigars (US)</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Type</label>
+        <select id="f-type">
+          <option>Single</option>
+          <option>5-Pack</option>
+          <option>10-Pack</option>
+          <option>Sampler</option>
+          <option>Bundle</option>
+          <option>Box</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Sticks in pack</label>
+        <input type="number" id="f-sticks-per" placeholder="e.g. 25" min="1">
+      </div>
+      <div class="field">
+        <label>Quantity (packs)</label>
+        <input type="number" id="f-qty" value="1" min="1">
+      </div>
+      <div class="field">
+        <label>Price (USD, excl. tax)</label>
+        <input type="number" id="f-price" placeholder="0.00" step="0.01">
+      </div>
+      <div class="field">
+        <label>MSRP (USD)</label>
+        <input type="number" id="f-msrp" placeholder="optional" step="0.01">
+      </div>
+      <div class="field">
+        <label>My rating</label>
+        <select id="f-rating">
+          <option value="">Not yet rated</option>
+          <option value="Legendary">Legendary (95-100)</option>
+          <option value="Banger">Banger (85-94)</option>
+          <option value="Solid">Solid (70-84)</option>
+          <option value="Hmm... ok">Hmm... ok (50-69)</option>
+          <option value="No thanks">No thanks (25-49)</option>
+          <option value="Dafuk?!">Dafuk?! (0-24)</option>
+        </select>
+      </div>
+      <div class="field" id="field-cc-rating">
+        <label>Cigar Collective rating <span class="field-badge" style="display:none">Auto</span></label>
+        <input type="text" id="f-cc-rating" placeholder="e.g. T2 or paste manually">
+      </div>
+      <div class="field" style="grid-column: 1 / -1" id="field-cc-link">
+        <label>Cigar Collective link <span class="field-badge" style="display:none">Auto</span></label>
+        <input type="url" id="f-cc-link" placeholder="https://...">
+      </div>
+      <div class="field" style="grid-column: 1 / -1" id="field-overview">
+        <label>Overview (general sentiment / your notes from research) <span class="field-badge" style="display:none">Auto</span></label>
+        <textarea id="f-overview" placeholder="Paste in or summarise the general sentiment around this blend..."></textarea>
+      </div>
+      <div class="field" style="grid-column: 1 / -1">
+        <label>Personal notes (e.g. wait for Black Friday)</label>
+        <textarea id="f-notes" placeholder="Optional"></textarea>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCigar()" id="save-btn">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Settings Modal -->
+<div class="modal-overlay" id="settings-modal">
+  <div class="modal">
+    <h2>Settings</h2>
+
+    <h3 style="font-family: var(--display-font); font-size: 16px; color: var(--text-secondary); margin-bottom: 12px;">Cigar Collective Ratings Database</h3>
+
+    <div class="db-status">
+      <div class="db-status-info">
+        <span class="db-status-label">Status</span>
+        <span class="db-status-value" id="db-status-text">Not configured</span>
+      </div>
+      <div class="db-status-info">
+        <span class="db-status-label">Ratings loaded</span>
+        <span class="db-status-value" id="db-status-count">0</span>
+      </div>
+      <div class="db-status-info">
+        <span class="db-status-label">Last fetched</span>
+        <span class="stat-sub" id="db-status-time">Never</span>
+      </div>
+    </div>
+
+    <div class="form-grid full">
+      <div class="field">
+        <label>Database JSON URL</label>
+        <input type="url" id="f-db-url" placeholder="https://ramophalatse.github.io/cigar-collective/ratings.json">
+      </div>
+    </div>
+
+    <p style="font-size: 12px; color: var(--text-muted); margin-top: 12px; line-height: 1.5;">
+      The widget will fetch this JSON file on load and use it to auto-complete cigar entries with Cigar Collective's tier ratings.
+      Paste in the GitHub Pages URL once your ratings database is hosted.
+      <br><br>
+      <strong style="color: var(--text-secondary);">Tier mapping:</strong> T1 &harr; Legendary, T2 &harr; Banger, T3 &harr; Solid, T4 &harr; Hmm... ok, T5 &harr; No thanks, T6 &harr; Dafuk?!
+    </p>
+
+    <div class="form-actions">
+      <button class="btn btn-secondary" onclick="closeSettingsModal()">Cancel</button>
+      <button class="btn btn-secondary" onclick="reloadDatabase()">Reload database</button>
+      <button class="btn btn-primary" onclick="saveSettings()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ============ STATE ============
+  let cigars = [];
+  let budget = 0;
+  let fxRate = 0.0606; // ZAR per USD fallback (1 ZAR = 0.0606 USD)
+  let editingId = null;
+  const SHIPPING_UPLIFT = 0.30; // 30% for US retailers
+  const US_RETAILERS = ['Atlantic Cigar Company', 'Luxury Cigar Club', 'I Heart Cigars'];
+
+  // Ratings database
+  let ratingsDB = { ratings: [], tier_scale: {}, lastFetched: null };
+  let dbUrl = '';
+  let autocompleteHighlight = -1;
+  let currentMatchedRating = null; // populated when a DB match auto-fills the form
+
+  // Tier mapping: Cigar Collective tier → user rating
+  const TIER_TO_USER = {
+    'T1': 'Legendary',
+    'T2': 'Banger',
+    'T3': 'Solid',
+    'T4': 'Hmm... ok',
+    'T5': 'No thanks',
+    'T6': 'Dafuk?!'
+  };
+  const USER_TO_TIER = {
+    'Legendary': 'T1',
+    'Banger': 'T2',
+    'Solid': 'T3',
+    'Hmm... ok': 'T4',
+    'No thanks': 'T5',
+    'Dafuk?!': 'T6'
+  };
+
+  // Default sticks per pack guesses
+  const DEFAULT_STICKS = {
+    'Single': 1, '5-Pack': 5, '10-Pack': 10,
+    'Sampler': 5, 'Bundle': 20, 'Box': 20
+  };
+
+  // ============ STORAGE ============
+  async function loadState() {
+    try {
+      const res = await window.storage.get('watchlist-cigars');
+      if (res && res.value) cigars = JSON.parse(res.value);
+    } catch(e) { /* no data yet */ }
+    try {
+      const res = await window.storage.get('watchlist-budget');
+      if (res && res.value) {
+        budget = parseFloat(res.value);
+        document.getElementById('budget-zar').value = budget || '';
+      }
+    } catch(e) { /* no data yet */ }
+    try {
+      const res = await window.storage.get('watchlist-db-url');
+      if (res && res.value) dbUrl = res.value;
+    } catch(e) { /* no data yet */ }
+    try {
+      const res = await window.storage.get('watchlist-db-cache');
+      if (res && res.value) ratingsDB = JSON.parse(res.value);
+    } catch(e) { /* no cached database */ }
+  }
+
+  async function saveCigars() {
+    try {
+      await window.storage.set('watchlist-cigars', JSON.stringify(cigars));
+    } catch(e) {
+      showToast('Save failed: ' + e.message);
+    }
+  }
+
+  async function saveBudget() {
+    try {
+      await window.storage.set('watchlist-budget', String(budget));
+    } catch(e) { /* ignore */ }
+  }
+
+  // ============ FX ============
+  async function loadFXRate() {
+    const rateEl = document.getElementById('fx-rate');
+    const timeEl = document.getElementById('fx-time');
+    rateEl.textContent = 'Loading...';
+    try {
+      const res = await fetch('https://open.er-api.com/v6/latest/ZAR');
+      const data = await res.json();
+      if (data && data.rates && data.rates.USD) {
+        fxRate = data.rates.USD;
+        const ts = new Date(data.time_last_update_utc || Date.now());
+        rateEl.textContent = '1 USD = R ' + (1/fxRate).toFixed(2);
+        timeEl.textContent = 'Updated ' + ts.toLocaleString('en-GB', { timeZone: 'Africa/Johannesburg', hour12: false });
+        document.getElementById('total-fx-note').textContent = '@ 1 USD = R ' + (1/fxRate).toFixed(3);
+        try { await window.storage.set('watchlist-fx', JSON.stringify({rate: fxRate, time: ts.toISOString()})); } catch(e) {}
+      } else {
+        throw new Error('Invalid response');
+      }
+    } catch(e) {
+      // Try cached
+      try {
+        const cached = await window.storage.get('watchlist-fx');
+        if (cached && cached.value) {
+          const c = JSON.parse(cached.value);
+          fxRate = c.rate;
+          rateEl.textContent = '1 USD = R ' + (1/fxRate).toFixed(2);
+          timeEl.textContent = 'Cached: ' + new Date(c.time).toLocaleString('en-GB');
+        } else {
+          rateEl.textContent = '1 USD = R ' + (1/fxRate).toFixed(2);
+          timeEl.textContent = 'Fallback rate (offline)';
+        }
+      } catch(err) {
+        rateEl.textContent = '1 USD = R ' + (1/fxRate).toFixed(2);
+        timeEl.textContent = 'Fallback rate (offline)';
+      }
+    }
+    updateBudget();
+    render();
+  }
+
+  // ============ CALCULATIONS ============
+  function isUSRetailer(retailer) {
+    return US_RETAILERS.includes(retailer);
+  }
+
+  function calcSubtotal(c) {
+    return (parseFloat(c.price) || 0) * (parseInt(c.qty) || 0);
+  }
+
+  function calcLandedUSD(c) {
+    const sub = calcSubtotal(c);
+    return isUSRetailer(c.retailer) ? sub * (1 + SHIPPING_UPLIFT) : sub;
+  }
+
+  function calcLandedZAR(c) {
+    if (!fxRate) return 0;
+    return calcLandedUSD(c) / fxRate;
+  }
+
+  function calcDiscount(c) {
+    const msrp = parseFloat(c.msrp);
+    const price = parseFloat(c.price);
+    if (!msrp || !price || msrp <= 0) return null;
+    return ((msrp - price) / msrp) * 100;
+  }
+
+  function calcSticks(c) {
+    const sticksPerPack = parseInt(c.sticksPer) || DEFAULT_STICKS[c.type] || 1;
+    const qty = parseInt(c.qty) || 0;
+    return sticksPerPack * qty;
+  }
+
+  function calcPerStick(c) {
+    const sticks = calcSticks(c);
+    if (!sticks) return 0;
+    return calcLandedUSD(c) / sticks;
+  }
+
+  function ratingScore(rating) {
+    const scores = { 'Legendary': 97, 'Banger': 89, 'Solid': 77, 'Hmm... ok': 59, 'No thanks': 37, 'Dafuk?!': 12 };
+    return scores[rating] || 0;
+  }
+
+  function ratingClass(rating) {
+    if (!rating) return 'unrated';
+    return rating.toLowerCase().replace(/[^a-z]/g, '').replace('ok','').replace('thanks','') ||
+           ({ 'Legendary':'legendary','Banger':'banger','Solid':'solid','Hmm... ok':'hmm','No thanks':'no','Dafuk?!':'dafuk' })[rating] || 'unrated';
+  }
+  // Simpler mapper:
+  function ratingClassClean(rating) {
+    const map = {
+      'Legendary': 'legendary',
+      'Banger': 'banger',
+      'Solid': 'solid',
+      'Hmm... ok': 'hmm',
+      'No thanks': 'no',
+      'Dafuk?!': 'dafuk'
+    };
+    return map[rating] || 'unrated';
+  }
+
+  // ============ FORMAT ============
+  function fmtUSD(v) { return '$' + (v || 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
+  function fmtZAR(v) { return 'R ' + (v || 0).toLocaleString('en-ZA', {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
+
+  // ============ RENDER ============
+  function render() {
+    const container = document.getElementById('cards');
+    const filterStatus = document.getElementById('filter-status').value;
+    const filterRetailer = document.getElementById('filter-retailer').value;
+    const filterRating = document.getElementById('filter-rating').value;
+    const sortBy = document.getElementById('filter-sort').value;
+
+    let filtered = cigars.filter(c => {
+      if (filterStatus !== 'all' && (c.status || 'watching') !== filterStatus) return false;
+      if (filterRetailer !== 'all' && c.retailer !== filterRetailer) return false;
+      if (filterRating !== 'all') {
+        if (filterRating === 'unrated') {
+          if (c.rating) return false;
+        } else if (c.rating !== filterRating) return false;
+      }
+      return true;
+    });
+
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'value': {
+          const av = ratingScore(a.rating) * Math.max(0, calcDiscount(a) || 0);
+          const bv = ratingScore(b.rating) * Math.max(0, calcDiscount(b) || 0);
+          return bv - av;
+        }
+        case 'discount': return (calcDiscount(b) || -1) - (calcDiscount(a) || -1);
+        case 'price-asc': return calcLandedUSD(a) - calcLandedUSD(b);
+        case 'price-desc': return calcLandedUSD(b) - calcLandedUSD(a);
+        case 'per-stick': return calcPerStick(a) - calcPerStick(b);
+        default: return (b.added || 0) - (a.added || 0);
+      }
+    });
+
+    document.getElementById('count-badge').textContent = filtered.length + ' of ' + cigars.length + ' shown';
+
+    if (filtered.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <h3>${cigars.length === 0 ? 'No cigars on the watchlist yet' : 'No cigars match your filters'}</h3>
+          <p>${cigars.length === 0 ? 'Add your first cigar to start tracking prices and value.' : 'Try adjusting the filters above.'}</p>
+        </div>`;
+      document.getElementById('totals-bar').style.display = 'none';
+    } else {
+      container.innerHTML = filtered.map(c => renderCard(c)).join('');
+      document.getElementById('totals-bar').style.display = 'grid';
+    }
+
+    renderTotals(filtered);
+    updateBudget();
+  }
+
+  function renderCard(c) {
+    const subtotal = calcSubtotal(c);
+    const landedUSD = calcLandedUSD(c);
+    const landedZAR = calcLandedZAR(c);
+    const discount = calcDiscount(c);
+    const sticks = calcSticks(c);
+    const perStick = calcPerStick(c);
+    const ratingCls = ratingClassClean(c.rating);
+    const status = c.status || 'watching';
+    const usFlag = isUSRetailer(c.retailer);
+    const aligned = isAligned(c.rating, c.ccRating);
+    const ccTier = detectTierFromCCRating(c.ccRating);
+
+    return `
+      <div class="card status-${status}">
+        <div class="card-head">
+          <div class="card-title-block">
+            <div class="card-title">${escape(c.cigar || 'Untitled')}</div>
+            <div class="card-meta">
+              <span class="retailer">${escape(c.retailer || '—')}</span>
+              <span>${escape(c.type || '—')}${c.qty > 1 ? ' &times; ' + c.qty : ''}</span>
+              ${sticks ? `<span>${sticks} stick${sticks!==1?'s':''}</span>` : ''}
+              <span class="rating-pill ${ratingCls} ${aligned ? 'aligned' : ''}">${c.rating ? escape(c.rating) : 'Unrated'}</span>
+              ${ccTier ? `<span class="cc-tier-pill ${aligned ? 'aligned' : ''}"><span class="cc-prefix">CC</span>${escape(ccTier)}</span>` : ''}
+              ${aligned ? `<span class="alignment-badge">Palates aligned</span>` : ''}
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="status-pill ${status}" onclick="cycleStatus('${c.id}')" title="Click to change status">${statusLabel(status)}</button>
+            <button class="btn-icon" onclick="editCigar('${c.id}')" title="Edit">&#9998;</button>
+            <button class="btn-icon danger" onclick="deleteCigar('${c.id}')" title="Delete">&times;</button>
+          </div>
+        </div>
+
+        <div class="card-grid">
+          <div class="stat">
+            <span class="stat-label">Unit price</span>
+            <span class="stat-value">${fmtUSD(parseFloat(c.price) || 0)}</span>
+            ${c.msrp ? `<span class="stat-sub">MSRP ${fmtUSD(parseFloat(c.msrp))}</span>` : ''}
+          </div>
+          <div class="stat">
+            <span class="stat-label">Subtotal</span>
+            <span class="stat-value">${fmtUSD(subtotal)}</span>
+            <span class="stat-sub">${c.qty} &times; ${fmtUSD(parseFloat(c.price) || 0)}</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Discount</span>
+            <span class="stat-value ${discount !== null && discount > 0 ? 'success' : (discount !== null && discount < 0 ? 'warning' : 'muted')}">
+              ${discount !== null ? (discount > 0 ? '-' : '+') + Math.abs(discount).toFixed(1) + '%' : '—'}
+            </span>
+            <span class="stat-sub">${discount !== null ? 'vs MSRP' : 'no MSRP set'}</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Per stick</span>
+            <span class="stat-value">${perStick ? fmtUSD(perStick) : '—'}</span>
+            <span class="stat-sub">landed cost</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Landed (USD)</span>
+            <span class="stat-value accent">${fmtUSD(landedUSD)}</span>
+            <span class="stat-sub">${usFlag ? '+30% shipping' : 'incl. shipping'}</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Landed (ZAR)</span>
+            <span class="stat-value accent">${fmtZAR(landedZAR)}</span>
+            <span class="stat-sub">at current FX</span>
+          </div>
+        </div>
+
+        <div class="card-extras">
+          <div class="extra-block">
+            <span class="label">Overview</span>
+            <p class="content ${c.overview ? '' : 'empty'}">${c.overview ? escape(c.overview) : 'No overview added yet.'}</p>
+          </div>
+          <div class="extra-block">
+            <span class="label">
+              Cigar Collective
+              ${c.ccLink ? `<a href="${escape(c.ccLink)}" target="_blank" rel="noopener" style="margin-left:8px;color:var(--accent);text-decoration:none;font-size:9px;">[link &#8599;]</a>` : ''}
+            </span>
+            <p class="content ${c.ccRating ? '' : 'empty'}">${c.ccRating ? escape(c.ccRating) : 'No rating added yet.'}</p>
+            ${c.notes ? `<span class="label" style="margin-top:6px">Notes</span><p class="content">${escape(c.notes)}</p>` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function statusLabel(s) {
+    return { watching: 'Watching', ready: 'Ready to buy', bought: 'Bought' }[s] || 'Watching';
+  }
+
+  function escape(s) {
+    if (s === null || s === undefined) return '';
+    return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+
+  function renderTotals(items) {
+    let subUSD = 0, shipping = 0, sticks = 0;
+    items.forEach(c => {
+      const sub = calcSubtotal(c);
+      subUSD += sub;
+      if (isUSRetailer(c.retailer)) shipping += sub * SHIPPING_UPLIFT;
+      sticks += calcSticks(c);
+    });
+    const landedUSD = subUSD + shipping;
+    const landedZAR = fxRate ? landedUSD / fxRate : 0;
+
+    document.getElementById('total-items').textContent = items.length;
+    document.getElementById('total-sticks').textContent = sticks + ' stick' + (sticks!==1?'s':'');
+    document.getElementById('total-usd').textContent = fmtUSD(subUSD);
+    document.getElementById('total-shipping').textContent = fmtUSD(shipping);
+    document.getElementById('total-landed-usd').textContent = fmtUSD(landedUSD);
+    document.getElementById('total-landed-zar').textContent = fmtZAR(landedZAR);
+  }
+
+  function updateBudget() {
+    const all = cigars; // budget always tracks the whole list, not filtered view
+    let landedUSD = 0;
+    all.forEach(c => { landedUSD += calcLandedUSD(c); });
+    const landedZAR = fxRate ? landedUSD / fxRate : 0;
+    const remaining = budget - landedZAR;
+    const pct = budget > 0 ? Math.min(200, (landedZAR / budget) * 100) : 0;
+
+    document.getElementById('spent-display').textContent = fmtZAR(landedZAR);
+    document.getElementById('remaining-display').textContent = fmtZAR(remaining);
+    document.getElementById('budget-usd').textContent = budget > 0 && fxRate
+      ? '= ' + fmtUSD(budget * fxRate) + ' USD'
+      : '= $0.00 USD';
+
+    const fill = document.getElementById('progress-fill');
+    fill.style.width = Math.min(100, pct) + '%';
+    fill.classList.toggle('over', pct > 100);
+    document.getElementById('progress-pct').textContent =
+      budget > 0 ? pct.toFixed(0) + '% of budget used' + (pct > 100 ? ' (over by ' + fmtZAR(Math.abs(remaining)) + ')' : '') : 'Set a budget to track spending';
+  }
+
+  // ============ ACTIONS ============
+  function openAddModal() {
+    editingId = null;
+    document.getElementById('modal-title').textContent = 'Add Cigar';
+    document.getElementById('save-btn').textContent = 'Save';
+    clearForm();
+    clearAutoFillState();
+    document.getElementById('modal').classList.add('active');
+  }
+
+  function editCigar(id) {
+    const c = cigars.find(x => x.id === id);
+    if (!c) return;
+    editingId = id;
+    document.getElementById('modal-title').textContent = 'Edit Cigar';
+    document.getElementById('save-btn').textContent = 'Update';
+    document.getElementById('f-cigar').value = c.cigar || '';
+    document.getElementById('f-retailer').value = c.retailer || 'COH Cigars';
+    document.getElementById('f-type').value = c.type || 'Single';
+    document.getElementById('f-sticks-per').value = c.sticksPer || '';
+    document.getElementById('f-qty').value = c.qty || 1;
+    document.getElementById('f-price').value = c.price || '';
+    document.getElementById('f-msrp').value = c.msrp || '';
+    document.getElementById('f-rating').value = c.rating || '';
+    document.getElementById('f-cc-rating').value = c.ccRating || '';
+    document.getElementById('f-cc-link').value = c.ccLink || '';
+    document.getElementById('f-overview').value = c.overview || '';
+    document.getElementById('f-notes').value = c.notes || '';
+    clearAutoFillState();
+    document.getElementById('modal').classList.add('active');
+  }
+
+  function clearForm() {
+    ['f-cigar','f-sticks-per','f-price','f-msrp','f-cc-rating','f-cc-link','f-overview','f-notes'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('f-retailer').value = 'COH Cigars';
+    document.getElementById('f-type').value = 'Single';
+    document.getElementById('f-qty').value = 1;
+    document.getElementById('f-rating').value = '';
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.remove('active');
+    editingId = null;
+  }
+
+  async function saveCigar() {
+    const cigar = document.getElementById('f-cigar').value.trim();
+    if (!cigar) { showToast('Cigar name is required'); return; }
+
+    const data = {
+      cigar,
+      retailer: document.getElementById('f-retailer').value,
+      type: document.getElementById('f-type').value,
+      sticksPer: document.getElementById('f-sticks-per').value,
+      qty: parseInt(document.getElementById('f-qty').value) || 1,
+      price: document.getElementById('f-price').value,
+      msrp: document.getElementById('f-msrp').value,
+      rating: document.getElementById('f-rating').value,
+      ccRating: document.getElementById('f-cc-rating').value.trim(),
+      ccLink: document.getElementById('f-cc-link').value.trim(),
+      overview: document.getElementById('f-overview').value.trim(),
+      notes: document.getElementById('f-notes').value.trim()
+    };
+
+    if (editingId) {
+      const idx = cigars.findIndex(c => c.id === editingId);
+      if (idx >= 0) cigars[idx] = { ...cigars[idx], ...data };
+      showToast('Updated');
+    } else {
+      data.id = 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+      data.added = Date.now();
+      data.status = 'watching';
+      cigars.push(data);
+      showToast('Added to watchlist');
+    }
+
+    await saveCigars();
+    closeModal();
+    render();
+  }
+
+  async function deleteCigar(id) {
+    if (!confirm('Remove this cigar from your watchlist?')) return;
+    cigars = cigars.filter(c => c.id !== id);
+    await saveCigars();
+    showToast('Removed');
+    render();
+  }
+
+  async function cycleStatus(id) {
+    const c = cigars.find(x => x.id === id);
+    if (!c) return;
+    const next = { watching: 'ready', ready: 'bought', bought: 'watching' };
+    c.status = next[c.status || 'watching'];
+    await saveCigars();
+    render();
+  }
+
+  // Budget input
+  document.getElementById('budget-zar').addEventListener('input', async (e) => {
+    budget = parseFloat(e.target.value) || 0;
+    await saveBudget();
+    updateBudget();
+  });
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  // Close modal on overlay click
+  document.getElementById('modal').addEventListener('click', (e) => {
+    if (e.target.id === 'modal') closeModal();
+  });
+  document.getElementById('settings-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'settings-modal') closeSettingsModal();
+  });
+
+  // ESC to close modal
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeModal();
+      closeSettingsModal();
+    }
+  });
+
+  // ============ RATINGS DATABASE ============
+  async function loadRatingsDB() {
+    if (!dbUrl) {
+      updateDBStatusIndicator('empty', 'Not configured');
+      return;
+    }
+    try {
+      const res = await fetch(dbUrl, { cache: 'no-cache' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      if (!data.ratings || !Array.isArray(data.ratings)) {
+        throw new Error('Invalid schema (missing "ratings" array)');
+      }
+      ratingsDB = {
+        ratings: data.ratings,
+        tier_scale: data.tier_scale || {},
+        version: data.version,
+        source: data.source,
+        lastFetched: new Date().toISOString()
+      };
+      try { await window.storage.set('watchlist-db-cache', JSON.stringify(ratingsDB)); } catch(e) {}
+      updateDBStatusIndicator('success', 'Connected');
+      return true;
+    } catch (e) {
+      updateDBStatusIndicator('error', 'Fetch failed: ' + e.message);
+      return false;
+    }
+  }
+
+  function updateDBStatusIndicator(state, msg) {
+    const btn = document.getElementById('settings-btn');
+    btn.classList.remove('has-status', 'error', 'empty');
+    if (state) btn.classList.add('has-status', state);
+
+    const text = document.getElementById('db-status-text');
+    const count = document.getElementById('db-status-count');
+    const time = document.getElementById('db-status-time');
+    if (text) {
+      text.textContent = msg || 'Not configured';
+      text.className = 'db-status-value ' + (state || '');
+    }
+    if (count) count.textContent = (ratingsDB.ratings || []).length;
+    if (time) {
+      time.textContent = ratingsDB.lastFetched
+        ? new Date(ratingsDB.lastFetched).toLocaleString('en-GB', { timeZone: 'Africa/Johannesburg', hour12: false })
+        : 'Never';
+    }
+  }
+
+  // ============ AUTOCOMPLETE ============
+  function onCigarInput() {
+    const input = document.getElementById('f-cigar');
+    const query = input.value.trim().toLowerCase();
+    const list = document.getElementById('autocomplete-list');
+
+    if (!query || query.length < 2 || !ratingsDB.ratings || ratingsDB.ratings.length === 0) {
+      hideAutocomplete();
+      // If user typed something different from a previously matched rating, clear the match
+      if (currentMatchedRating && input.value !== currentMatchedRating.full_name) {
+        clearAutoFillState();
+      }
+      return;
+    }
+
+    // Score matches: prioritise full_name, then brand+blend, then any field
+    const matches = ratingsDB.ratings
+      .map(r => {
+        const full = (r.full_name || `${r.brand || ''} ${r.blend || ''} ${r.vitola || ''}`.trim()).toLowerCase();
+        const brand = (r.brand || '').toLowerCase();
+        const blend = (r.blend || '').toLowerCase();
+        const vitola = (r.vitola || '').toLowerCase();
+        let score = 0;
+        if (full.startsWith(query)) score = 100;
+        else if (full.includes(query)) score = 80;
+        else if (brand.includes(query) || blend.includes(query)) score = 60;
+        else if (vitola.includes(query)) score = 40;
+        return { rating: r, score, full };
+      })
+      .filter(m => m.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 8);
+
+    if (matches.length === 0) {
+      hideAutocomplete();
+      return;
+    }
+
+    autocompleteHighlight = -1;
+    list.innerHTML = matches.map((m, i) => {
+      const r = m.rating;
+      const fullName = r.full_name || `${r.brand || ''} ${r.blend || ''} ${r.vitola || ''}`.trim();
+      const tier = r.tier || '';
+      const tierLabel = r.tier_label || TIER_TO_USER[tier] || '';
+      return `
+        <div class="autocomplete-item" data-idx="${i}" onmousedown="selectAutocomplete(${i})">
+          <div class="autocomplete-name">${escape(fullName)}</div>
+          <div class="autocomplete-meta">
+            ${tier ? `<span class="autocomplete-tier-pill">${escape(tier)}</span>` : ''}
+            ${tierLabel ? `<span>${escape(tierLabel)}</span>` : ''}
+            ${r.review_date ? `<span>&middot; ${escape(r.review_date)}</span>` : ''}
+          </div>
+        </div>
+      `;
+    }).join('');
+    list.classList.add('active');
+    // Stash matches for keyboard nav
+    list._matches = matches;
+  }
+
+  function onCigarKeydown(e) {
+    const list = document.getElementById('autocomplete-list');
+    if (!list.classList.contains('active')) return;
+    const items = list.querySelectorAll('.autocomplete-item');
+    if (!items.length) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      autocompleteHighlight = Math.min(items.length - 1, autocompleteHighlight + 1);
+      updateHighlight(items);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      autocompleteHighlight = Math.max(0, autocompleteHighlight - 1);
+      updateHighlight(items);
+    } else if (e.key === 'Enter' && autocompleteHighlight >= 0) {
+      e.preventDefault();
+      selectAutocomplete(autocompleteHighlight);
+    } else if (e.key === 'Escape') {
+      hideAutocomplete();
+    }
+  }
+
+  function updateHighlight(items) {
+    items.forEach((el, i) => el.classList.toggle('highlighted', i === autocompleteHighlight));
+    if (autocompleteHighlight >= 0 && items[autocompleteHighlight]) {
+      items[autocompleteHighlight].scrollIntoView({ block: 'nearest' });
+    }
+  }
+
+  function selectAutocomplete(idx) {
+    const list = document.getElementById('autocomplete-list');
+    const matches = list._matches || [];
+    if (!matches[idx]) return;
+    const r = matches[idx].rating;
+    const fullName = r.full_name || `${r.brand || ''} ${r.blend || ''} ${r.vitola || ''}`.trim();
+
+    document.getElementById('f-cigar').value = fullName;
+    document.getElementById('f-cc-rating').value = r.tier ? `${r.tier} (${r.tier_label || TIER_TO_USER[r.tier] || ''})`.trim() : (r.tier_label || '');
+    document.getElementById('f-cc-link').value = r.post_url || '';
+    if (r.notes && !document.getElementById('f-overview').value.trim()) {
+      document.getElementById('f-overview').value = r.notes;
+    }
+
+    currentMatchedRating = r;
+    setAutoFillIndicators(true);
+    hideAutocomplete();
+  }
+
+  function setAutoFillIndicators(on) {
+    const fields = ['field-cc-rating', 'field-cc-link', 'field-overview'];
+    fields.forEach(id => {
+      const field = document.getElementById(id);
+      if (!field) return;
+      field.classList.toggle('auto-filled', on);
+      const badge = field.querySelector('.field-badge');
+      if (badge) badge.style.display = on ? 'inline-block' : 'none';
+    });
+    const matchBadge = document.getElementById('match-badge');
+    if (matchBadge) matchBadge.style.display = on ? 'inline-block' : 'none';
+  }
+
+  function clearAutoFillState() {
+    currentMatchedRating = null;
+    setAutoFillIndicators(false);
+  }
+
+  function hideAutocomplete() {
+    const list = document.getElementById('autocomplete-list');
+    if (list) list.classList.remove('active');
+    autocompleteHighlight = -1;
+  }
+
+  // ============ SETTINGS MODAL ============
+  function openSettingsModal() {
+    document.getElementById('f-db-url').value = dbUrl || '';
+    updateDBStatusIndicator(
+      dbUrl ? (ratingsDB.ratings && ratingsDB.ratings.length ? 'success' : 'error') : 'empty',
+      dbUrl ? (ratingsDB.ratings && ratingsDB.ratings.length ? 'Connected' : 'Not loaded') : 'Not configured'
+    );
+    document.getElementById('settings-modal').classList.add('active');
+  }
+
+  function closeSettingsModal() {
+    document.getElementById('settings-modal').classList.remove('active');
+  }
+
+  async function saveSettings() {
+    const newUrl = document.getElementById('f-db-url').value.trim();
+    const urlChanged = newUrl !== dbUrl;
+    dbUrl = newUrl;
+    try { await window.storage.set('watchlist-db-url', dbUrl); } catch(e) {}
+    if (urlChanged && dbUrl) {
+      showToast('Loading database...');
+      const ok = await loadRatingsDB();
+      if (ok) showToast('Database loaded (' + ratingsDB.ratings.length + ' ratings)');
+    } else if (!dbUrl) {
+      ratingsDB = { ratings: [], tier_scale: {}, lastFetched: null };
+      try { await window.storage.delete('watchlist-db-cache'); } catch(e) {}
+      updateDBStatusIndicator('empty', 'Not configured');
+    }
+    closeSettingsModal();
+  }
+
+  async function reloadDatabase() {
+    if (!dbUrl) {
+      showToast('Set a URL first');
+      return;
+    }
+    showToast('Reloading...');
+    const ok = await loadRatingsDB();
+    if (ok) showToast('Reloaded (' + ratingsDB.ratings.length + ' ratings)');
+  }
+
+  // ============ TIER MATCH DETECTION ============
+  function detectTierFromCCRating(ccRatingStr) {
+    if (!ccRatingStr) return null;
+    const match = ccRatingStr.match(/T[1-6]/i);
+    return match ? match[0].toUpperCase() : null;
+  }
+
+  function isAligned(userRating, ccRatingStr) {
+    if (!userRating || !ccRatingStr) return false;
+    const ccTier = detectTierFromCCRating(ccRatingStr);
+    if (!ccTier) return false;
+    return USER_TO_TIER[userRating] === ccTier;
+  }
+
+
+  // ============ INIT ============
+  (async function init() {
+    await loadState();
+    await loadFXRate();
+    // Update DB indicator from cached state, then try fetching fresh
+    updateDBStatusIndicator(
+      dbUrl ? (ratingsDB.ratings && ratingsDB.ratings.length ? 'success' : 'empty') : 'empty',
+      dbUrl ? (ratingsDB.ratings && ratingsDB.ratings.length ? 'Connected (cached)' : 'Not loaded') : 'Not configured'
+    );
+    if (dbUrl) loadRatingsDB(); // fire-and-forget refresh in background
+    render();
+  })();
+</script>
+</body>
+</html>
