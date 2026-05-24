@@ -350,6 +350,37 @@
   .card:hover { border-color: var(--border-strong); }
   .card.status-bought { opacity: 0.55; }
   .card.status-ready { border-left: 3px solid var(--success); }
+  .card.inactive {
+    opacity: 0.4;
+    filter: grayscale(0.4);
+    border-style: dashed;
+  }
+  .card.inactive .card-title { text-decoration: line-through; text-decoration-color: var(--text-muted); }
+
+  .toggle-active-btn {
+    background: none;
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    color: var(--text-muted);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-family: var(--body-font);
+    font-weight: 600;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .toggle-active-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .toggle-active-btn.is-inactive {
+    border-color: var(--danger);
+    color: var(--danger);
+  }
+  .toggle-active-btn.is-inactive:hover {
+    background: var(--danger);
+    color: var(--bg-deep);
+  }
 
   .card-head {
     display: flex;
@@ -1238,6 +1269,7 @@
       overview: row.overview,
       notes: row.notes,
       status: row.status || 'watching',
+      active: row.active !== false, // default true; explicit false = excluded
       added: row.added_at ? new Date(row.added_at).getTime() : Date.now()
     };
   }
@@ -1258,6 +1290,7 @@
       overview: c.overview || null,
       notes: c.notes || null,
       status: c.status || 'watching',
+      active: c.active !== false,
       updated_at: new Date().toISOString()
     };
     if (includeId && c.id) row.id = c.id;
@@ -1736,8 +1769,10 @@
     const ccTier = detectTierFromCCRating(c.ccRating);
     const isPending = pendingRowIds.has(c.id);
 
+    const isActive = c.active !== false;
+
     return `
-      <div class="card status-${status}">
+      <div class="card status-${status}${isActive ? '' : ' inactive'}">
         <div class="card-head">
           <div class="card-title-block">
             <div class="card-title">${escape(c.cigar || 'Untitled')}${isPending ? '<span class="pending-pill">Pending sync</span>' : ''}</div>
@@ -1750,6 +1785,7 @@
             </div>
           </div>
           <div class="card-actions">
+            <button class="toggle-active-btn ${isActive ? '' : 'is-inactive'}" onclick="toggleActive('${c.id}')" title="${isActive ? 'Exclude from basket' : 'Include in basket'}">${isActive ? 'In basket' : 'Excluded'}</button>
             <button class="status-pill ${status}" onclick="cycleStatus('${c.id}')" title="Click to change status">${statusLabel(status)}</button>
             <button class="btn-icon" onclick="editCigar('${c.id}')" title="Edit">&#9998;</button>
             <button class="btn-icon danger" onclick="deleteCigar('${c.id}')" title="Delete">&times;</button>
@@ -1820,7 +1856,7 @@
 
   function renderTotals(items) {
     let subUSD = 0, shipping = 0, sticks = 0;
-    items.forEach(c => {
+    items.filter(c => c.active !== false).forEach(c => {
       const sub = calcSubtotal(c);
       subUSD += sub;
       if (isUSRetailer(c.retailer)) shipping += sub * SHIPPING_UPLIFT;
@@ -1840,7 +1876,7 @@
   }
 
   function updateBudget() {
-    const all = cigars; // budget always tracks the whole list, not filtered view
+    const all = cigars.filter(c => c.active !== false);
     let landedUSD = 0;
     all.forEach(c => { landedUSD += calcLandedUSD(c); });
     const landedZAR = fxRate ? landedUSD / fxRate : 0;
@@ -1958,6 +1994,14 @@
     if (!c) return;
     const next = { watching: 'ready', ready: 'bought', bought: 'watching' };
     c.status = next[c.status || 'watching'];
+    await dbUpdateCigar(c);
+    render();
+  }
+
+  async function toggleActive(id) {
+    const c = cigars.find(x => x.id === id);
+    if (!c) return;
+    c.active = c.active === false ? true : false;
     await dbUpdateCigar(c);
     render();
   }
