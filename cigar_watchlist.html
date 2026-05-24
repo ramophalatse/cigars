@@ -1018,6 +1018,11 @@
       <span class="value accent" id="total-landed-zar">R 0.00</span>
       <span class="sub" id="total-fx-note">at current FX</span>
     </div>
+    <div class="total-cell">
+      <span class="label">Per cigar (ZAR)</span>
+      <span class="value accent" id="total-per-cigar">R 0.00</span>
+      <span class="sub">landed basket avg</span>
+    </div>
   </div>
 
 </div>
@@ -1189,6 +1194,16 @@
     'T5': 'No thanks',
     'T6': 'Dafuk?!'
   };
+
+  // Display labels for CC tier pills on cards
+  const TIER_DISPLAY = {
+    'T1': 'S Tier',
+    'T2': 'A Tier',
+    'T3': 'B Tier',
+    'T4': 'C Tier',
+    'T5': 'D Tier',
+    'T6': 'F Tier'
+  };
   const USER_TO_TIER = {
     'Legendary': 'T1',
     'Banger': 'T2',
@@ -1266,7 +1281,12 @@
       if (settingsRes.data) {
         budget = parseFloat(settingsRes.data.budget_zar) || 0;
         document.getElementById('budget-zar').value = budget || '';
-        dbUrl = settingsRes.data.ratings_db_url || '';
+        // Use saved URL, or fall back to default if never saved
+        dbUrl = settingsRes.data.ratings_db_url || 'https://ramophalatse.github.io/cigars/ratings.json';
+        // If the default wasn't saved yet, persist it now
+        if (!settingsRes.data.ratings_db_url) {
+          dbUpdateSettings({ ratings_db_url: dbUrl });
+        }
       }
 
       isOnline = true;
@@ -1306,8 +1326,10 @@
     } catch(e) {}
     try {
       const res = await window.storage.get('watchlist-db-url');
-      if (res && res.value) dbUrl = res.value;
-    } catch(e) {}
+      dbUrl = (res && res.value) ? res.value : 'https://ramophalatse.github.io/cigars/ratings.json';
+    } catch(e) {
+      dbUrl = 'https://ramophalatse.github.io/cigars/ratings.json';
+    }
     await loadPendingWrites();
   }
 
@@ -1724,7 +1746,6 @@
               <span>${escape(c.type || '—')}${c.qty > 1 ? ' &times; ' + c.qty : ''}</span>
               ${sticks ? `<span>${sticks} stick${sticks!==1?'s':''}</span>` : ''}
               <span class="rating-pill ${ratingCls} ${aligned ? 'aligned' : ''}">${c.rating ? escape(c.rating) : 'Unrated'}</span>
-              ${ccTier ? `<span class="cc-tier-pill ${aligned ? 'aligned' : ''}"><span class="cc-prefix">CC</span>${escape(ccTier)}</span>` : ''}
               ${aligned ? `<span class="alignment-badge">Palates aligned</span>` : ''}
             </div>
           </div>
@@ -1780,7 +1801,7 @@
               Cigar Collective
               ${c.ccLink ? `<a href="${escape(c.ccLink)}" target="_blank" rel="noopener" style="margin-left:8px;color:var(--accent);text-decoration:none;font-size:9px;">[link &#8599;]</a>` : ''}
             </span>
-            <p class="content ${c.ccRating ? '' : 'empty'}">${c.ccRating ? escape(c.ccRating) : 'No rating added yet.'}</p>
+            <p class="content ${c.ccRating ? '' : 'empty'}">${c.ccRating ? escape(formatCCRating(c.ccRating)) : 'No rating added yet.'}</p>
             ${c.notes ? `<span class="label" style="margin-top:6px">Notes</span><p class="content">${escape(c.notes)}</p>` : ''}
           </div>
         </div>
@@ -1814,6 +1835,8 @@
     document.getElementById('total-shipping').textContent = fmtUSD(shipping);
     document.getElementById('total-landed-usd').textContent = fmtUSD(landedUSD);
     document.getElementById('total-landed-zar').textContent = fmtZAR(landedZAR);
+    const perCigar = sticks > 0 ? landedZAR / sticks : 0;
+    document.getElementById('total-per-cigar').textContent = perCigar ? fmtZAR(perCigar) : '—';
   }
 
   function updateBudget() {
@@ -2231,6 +2254,15 @@
     if (!ccRatingStr) return null;
     const match = ccRatingStr.match(/T[1-6]/i);
     return match ? match[0].toUpperCase() : null;
+  }
+
+  // Convert raw stored CC rating to display string
+  // e.g. "T1" → "S Tier", "T2 (Banger)" → "S Tier", free text stays as-is
+  function formatCCRating(ccRatingStr) {
+    if (!ccRatingStr) return '';
+    const tier = detectTierFromCCRating(ccRatingStr);
+    if (tier && TIER_DISPLAY[tier]) return TIER_DISPLAY[tier];
+    return ccRatingStr; // free-text ratings pass through unchanged
   }
 
   function isAligned(userRating, ccRatingStr) {
