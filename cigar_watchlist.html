@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js"></script>
 <style>
   :root {
     --bg-deep: #0e0c0a;
@@ -1313,7 +1314,10 @@
   async function loadRatingsDBCache() {
     try {
       const res = await window.storage.get('watchlist-db-cache');
-      if (res && res.value) ratingsDB = JSON.parse(res.value);
+      if (res && res.value) {
+        ratingsDB = JSON.parse(res.value);
+        buildFuseIndex();
+      }
     } catch(e) {}
   }
 
@@ -1989,6 +1993,7 @@
         source: data.source,
         lastFetched: new Date().toISOString()
       };
+      buildFuseIndex();
       try { await window.storage.set('watchlist-db-cache', JSON.stringify(ratingsDB)); } catch(e) {}
       updateDBStatusIndicator('success', 'Connected');
       return true;
@@ -2018,64 +2023,90 @@
     }
   }
 
-  // ============ AUTOCOMPLETE ============
+  // ============ AUTOCOMPLETE (Fuse.js fuzzy matching) ============
+
+  let fuseIndex = null; // rebuilt whenever ratingsDB changes
+
+  function buildFuseIndex() {
+    if (!ratingsDB.ratings || ratingsDB.ratings.length === 0) {
+      fuseIndex = null;
+      return;
+    }
+    fuseIndex = new Fuse(ratingsDB.ratings, {
+      // Fields to search, with relative weights
+      keys: [
+        { name: 'full_name', weight: 3 },
+        { name: 'blend',     weight: 2 },
+        { name: 'brand',     weight: 1.5 },
+        { name: 'vitola',    weight: 1 }
+      ],
+      // Balanced threshold: 0.0 = exact, 1.0 = match anything
+      // 0.4 catches word-order differences, abbreviations, missing words
+      // without drowning in noise
+      threshold: 0.4,
+      // Also handle accented characters (Padrón vs Padron)
+      ignoreLocation: true,
+      includeScore: true,
+      minMatchCharLength: 2,
+      useExtendedSearch: false
+    });
+  }
+
+  // HIGH_CONFIDENCE: score below this (closer to 0 = better in Fuse) triggers auto-fill
+  const HIGH_CONFIDENCE_SCORE = 0.15;
+
   function onCigarInput() {
     const input = document.getElementById('f-cigar');
-    const query = input.value.trim().toLowerCase();
+    const query = input.value.trim();
     const list = document.getElementById('autocomplete-list');
 
-    if (!query || query.length < 2 || !ratingsDB.ratings || ratingsDB.ratings.length === 0) {
-      hideAutocomplete();
-      // If user typed something different from a previously matched rating, clear the match
-      if (currentMatchedRating && input.value !== currentMatchedRating.full_name) {
-        clearAutoFillState();
-      }
-      return;
+    // If user edited away from a previously matched value, clear auto-fill state
+    if (currentMatchedRating && input.value !== currentMatchedRating.full_name) {
+      clearAutoFillState();
     }
 
-    // Score matches: prioritise full_name, then brand+blend, then any field
-    const matches = ratingsDB.ratings
-      .map(r => {
-        const full = (r.full_name || `${r.brand || ''} ${r.blend || ''} ${r.vitola || ''}`.trim()).toLowerCase();
-        const brand = (r.brand || '').toLowerCase();
-        const blend = (r.blend || '').toLowerCase();
-        const vitola = (r.vitola || '').toLowerCase();
-        let score = 0;
-        if (full.startsWith(query)) score = 100;
-        else if (full.includes(query)) score = 80;
-        else if (brand.includes(query) || blend.includes(query)) score = 60;
-        else if (vitola.includes(query)) score = 40;
-        return { rating: r, score, full };
-      })
-      .filter(m => m.score > 0)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 8);
-
-    if (matches.length === 0) {
+    if (!query || query.length < 2 || !fuseIndex) {
       hideAutocomplete();
       return;
     }
 
+    const results = fuseIndex.search(query, { limit: 8 });
+
+    if (results.length === 0) {
+      hideAutocomplete();
+      return;
+    }
+
+    // Single high-confidence match: auto-fill silently, no dropdown
+    if (results.length === 1 && results[0].score <= HIGH_CONFIDENCE_SCORE) {
+      selectResult(results[0].item);
+      hideAutocomplete();
+      return;
+    }
+
+    // Multiple results (or single but not confident enough): show dropdown
     autocompleteHighlight = -1;
-    list.innerHTML = matches.map((m, i) => {
-      const r = m.rating;
+    list.innerHTML = results.map((result, i) => {
+      const r = result.item;
       const fullName = r.full_name || `${r.brand || ''} ${r.blend || ''} ${r.vitola || ''}`.trim();
       const tier = r.tier || '';
       const tierLabel = r.tier_label || TIER_TO_USER[tier] || '';
+      // Confidence indicator: score 0=perfect, 0.4=threshold
+      const confidence = Math.round((1 - result.score) * 100);
       return `
-        <div class="autocomplete-item" data-idx="${i}" onmousedown="selectAutocomplete(${i})">
+        <div class="autocomplete-item" data-idx="${i}" onmousedown="selectAutocompleteByIdx(${i})">
           <div class="autocomplete-name">${escape(fullName)}</div>
           <div class="autocomplete-meta">
             ${tier ? `<span class="autocomplete-tier-pill">${escape(tier)}</span>` : ''}
             ${tierLabel ? `<span>${escape(tierLabel)}</span>` : ''}
             ${r.review_date ? `<span>&middot; ${escape(r.review_date)}</span>` : ''}
+            <span style="margin-left:auto;color:var(--text-muted);font-family:var(--mono-font)">${confidence}% match</span>
           </div>
         </div>
       `;
     }).join('');
     list.classList.add('active');
-    // Stash matches for keyboard nav
-    list._matches = matches;
+    list._results = results;
   }
 
   function onCigarKeydown(e) {
@@ -2094,7 +2125,7 @@
       updateHighlight(items);
     } else if (e.key === 'Enter' && autocompleteHighlight >= 0) {
       e.preventDefault();
-      selectAutocomplete(autocompleteHighlight);
+      selectAutocompleteByIdx(autocompleteHighlight);
     } else if (e.key === 'Escape') {
       hideAutocomplete();
     }
@@ -2107,23 +2138,26 @@
     }
   }
 
-  function selectAutocomplete(idx) {
+  function selectAutocompleteByIdx(idx) {
     const list = document.getElementById('autocomplete-list');
-    const matches = list._matches || [];
-    if (!matches[idx]) return;
-    const r = matches[idx].rating;
-    const fullName = r.full_name || `${r.brand || ''} ${r.blend || ''} ${r.vitola || ''}`.trim();
+    const results = list._results || [];
+    if (!results[idx]) return;
+    selectResult(results[idx].item);
+    hideAutocomplete();
+  }
 
+  function selectResult(r) {
+    const fullName = r.full_name || `${r.brand || ''} ${r.blend || ''} ${r.vitola || ''}`.trim();
     document.getElementById('f-cigar').value = fullName;
-    document.getElementById('f-cc-rating').value = r.tier ? `${r.tier} (${r.tier_label || TIER_TO_USER[r.tier] || ''})`.trim() : (r.tier_label || '');
+    document.getElementById('f-cc-rating').value = r.tier
+      ? `${r.tier}${r.tier_label ? ' (' + r.tier_label + ')' : ''}`
+      : (r.tier_label || '');
     document.getElementById('f-cc-link').value = r.post_url || '';
     if (r.notes && !document.getElementById('f-overview').value.trim()) {
       document.getElementById('f-overview').value = r.notes;
     }
-
     currentMatchedRating = r;
     setAutoFillIndicators(true);
-    hideAutocomplete();
   }
 
   function setAutoFillIndicators(on) {
