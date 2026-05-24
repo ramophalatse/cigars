@@ -1133,7 +1133,7 @@
     <div class="form-grid full">
       <div class="field">
         <label>Database JSON URL</label>
-        <input type="url" id="f-db-url" placeholder="https://ramophalatse.github.io/cigar-collective/ratings.json">
+        <input type="url" id="f-db-url" placeholder="https://ramophalatse.github.io/cigars/ratings.json" value="https://ramophalatse.github.io/cigars/ratings.json">
       </div>
     </div>
 
@@ -1156,8 +1156,8 @@
   // ============ STATE ============
   // Supabase
   const SUPABASE_URL = 'https://tiaplwggxuoonalvqdcg.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpYXBsd2dneHVvb25hbHZxZGNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1Njc5MjYsImV4cCI6MjA5NTE0MzkyNn0.o1vOLe6niAPtt7oRXnZVovcL6VLdoFNzoEz-Dn8-ZcU';
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const SUPABASE_KEY = 'sb_publishable_VllgEZt_lkaovHkp2phf3g_PE3lOMs5';
+  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   // Connection state
   let isOnline = false;
@@ -1175,7 +1175,7 @@
 
   // Ratings database
   let ratingsDB = { ratings: [], tier_scale: {}, lastFetched: null };
-  let dbUrl = '';
+  let dbUrl = 'https://ramophalatse.github.io/cigars/ratings.json';
   let autocompleteHighlight = -1;
   let currentMatchedRating = null; // populated when a DB match auto-fills the form
 
@@ -1254,8 +1254,8 @@
     try {
       // Try to fetch cigars and settings in parallel
       const [cigarsRes, settingsRes] = await Promise.all([
-        supabase.from('cigars').select('*').order('added_at', { ascending: false }),
-        supabase.from('user_settings').select('*').eq('id', 1).single()
+        db.from('cigars').select('*').order('added_at', { ascending: false }),
+        db.from('user_settings').select('*').eq('id', 1).single()
       ]);
 
       if (cigarsRes.error) throw cigarsRes.error;
@@ -1352,7 +1352,7 @@
       return;
     }
     setSyncState('saving');
-    const { error } = await supabase.from('cigars').insert(row);
+    const { error } = await db.from('cigars').insert(row);
     if (error) {
       await handleWriteFailure({ op: 'insert', table: 'cigars', data: row });
       pendingRowIds.add(c.id);
@@ -1372,7 +1372,7 @@
       return;
     }
     setSyncState('saving');
-    const { error } = await supabase.from('cigars').update(row).eq('id', c.id);
+    const { error } = await db.from('cigars').update(row).eq('id', c.id);
     if (error) {
       await handleWriteFailure({ op: 'update', table: 'cigars', id: c.id, data: row });
       pendingRowIds.add(c.id);
@@ -1390,7 +1390,7 @@
       return;
     }
     setSyncState('saving');
-    const { error } = await supabase.from('cigars').delete().eq('id', id);
+    const { error } = await db.from('cigars').delete().eq('id', id);
     if (error) {
       await handleWriteFailure({ op: 'delete', table: 'cigars', id });
     } else {
@@ -1408,7 +1408,7 @@
       return;
     }
     setSyncState('saving');
-    const { error } = await supabase.from('user_settings').update({ ...patch, updated_at: new Date().toISOString() }).eq('id', 1);
+    const { error } = await db.from('user_settings').update({ ...patch, updated_at: new Date().toISOString() }).eq('id', 1);
     if (error) {
       await handleWriteFailure({ op: 'update', table: 'user_settings', id: 1, data: patch });
     } else {
@@ -1437,15 +1437,15 @@
     for (const w of toFlush) {
       try {
         if (w.op === 'insert') {
-          const { error } = await supabase.from(w.table).insert(w.data);
+          const { error } = await db.from(w.table).insert(w.data);
           if (error) throw error;
           if (w.data && w.data.id) pendingRowIds.delete(w.data.id);
         } else if (w.op === 'update') {
-          const { error } = await supabase.from(w.table).update(w.data).eq('id', w.id);
+          const { error } = await db.from(w.table).update(w.data).eq('id', w.id);
           if (error) throw error;
           pendingRowIds.delete(w.id);
         } else if (w.op === 'delete') {
-          const { error } = await supabase.from(w.table).delete().eq('id', w.id);
+          const { error } = await db.from(w.table).delete().eq('id', w.id);
           if (error) throw error;
         }
       } catch (err) {
@@ -1488,13 +1488,13 @@
 
   async function checkConnection() {
     try {
-      const { error } = await supabase.from('user_settings').select('id').eq('id', 1).single();
+      const { error } = await db.from('user_settings').select('id').eq('id', 1).single();
       if (!error) {
         isOnline = true;
         showOfflineBanner(false);
         stopReconnectLoop();
         // Refetch fresh state from server
-        const { data: cigarsData, error: cErr } = await supabase.from('cigars').select('*').order('added_at', { ascending: false });
+        const { data: cigarsData, error: cErr } = await db.from('cigars').select('*').order('added_at', { ascending: false });
         if (!cErr) {
           cigars = (cigarsData || []).map(dbToApp);
           await cacheLocally();
