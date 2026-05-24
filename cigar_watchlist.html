@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root {
     --bg-deep: #0e0c0a;
@@ -606,6 +607,111 @@
   .settings-btn.has-status.error::after { background: var(--danger); }
   .settings-btn.has-status.empty::after { background: var(--warning); }
 
+  /* Sync status pill (next to settings cog) */
+  .sync-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    height: 42px;
+  }
+  .sync-status:hover { border-color: var(--accent); }
+  .sync-status .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    transition: background 0.3s;
+  }
+  .sync-status.synced .dot { background: var(--success); box-shadow: 0 0 6px var(--success); }
+  .sync-status.saving .dot {
+    background: var(--accent);
+    animation: pulseDot 1s ease-in-out infinite;
+  }
+  .sync-status.offline .dot { background: var(--danger); }
+  .sync-status.pending .dot {
+    background: var(--warning);
+    animation: pulseDot 1.5s ease-in-out infinite;
+  }
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .sync-status .label.synced { color: var(--success); }
+  .sync-status .label.saving { color: var(--accent); }
+  .sync-status .label.offline { color: var(--danger); }
+  .sync-status .label.pending { color: var(--warning); }
+  .sync-status .pending-count {
+    font-family: var(--mono-font);
+    font-weight: 600;
+    color: var(--warning);
+  }
+
+  /* Offline banner */
+  .offline-banner {
+    background: rgba(196, 99, 76, 0.15);
+    border: 1px solid var(--danger);
+    border-radius: 8px;
+    padding: 12px 18px;
+    margin-bottom: 20px;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .offline-banner.active { display: flex; }
+  .offline-banner-text {
+    font-size: 13px;
+    color: var(--text-primary);
+  }
+  .offline-banner-text strong { color: var(--danger); }
+  .offline-banner button {
+    background: var(--danger);
+    color: var(--bg-deep);
+    border: none;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--body-font);
+  }
+
+  /* Pending sync pill on card */
+  .pending-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    background: rgba(212, 160, 74, 0.15);
+    border: 1px solid var(--warning);
+    color: var(--warning);
+    border-radius: 10px;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-left: 6px;
+  }
+  .pending-pill::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    background: var(--warning);
+    border-radius: 50%;
+    animation: pulseDot 1.5s ease-in-out infinite;
+  }
+
   /* Database status block (inside settings modal) */
   .db-status {
     background: var(--bg-input);
@@ -787,8 +893,20 @@
         <div class="fx-time" id="fx-time"></div>
         <button class="fx-refresh" onclick="loadFXRate()">Refresh</button>
       </div>
+      <div class="sync-status" id="sync-status" onclick="manualReconnect()" title="Click to reconnect">
+        <span class="dot"></span>
+        <span class="label" id="sync-label">Connecting...</span>
+      </div>
       <button class="settings-btn" id="settings-btn" onclick="openSettingsModal()" title="Settings &amp; ratings database">&#9881;</button>
     </div>
+  </div>
+
+  <!-- Offline banner -->
+  <div class="offline-banner" id="offline-banner">
+    <div class="offline-banner-text">
+      <strong>Read-only mode:</strong> can't reach Supabase. Showing cached data. Changes will queue and sync when reconnected.
+    </div>
+    <button onclick="manualReconnect()">Retry now</button>
   </div>
 
   <!-- Budget Panel -->
@@ -1036,6 +1154,18 @@
 
 <script>
   // ============ STATE ============
+  // Supabase
+  const SUPABASE_URL = 'https://tiaplwggxuoonalvqdcg.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpYXBsd2dneHVvb25hbHZxZGNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1Njc5MjYsImV4cCI6MjA5NTE0MzkyNn0.o1vOLe6niAPtt7oRXnZVovcL6VLdoFNzoEz-Dn8-ZcU';
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // Connection state
+  let isOnline = false;
+  let syncState = 'connecting'; // connecting | synced | saving | offline | pending
+  let pendingWrites = []; // queued operations when offline: { op, table, data, id, timestamp }
+  let pendingRowIds = new Set(); // local IDs that haven't synced yet
+  let reconnectInterval = null;
+
   let cigars = [];
   let budget = 0;
   let fxRate = 0.0606; // ZAR per USD fallback (1 ZAR = 0.0606 USD)
@@ -1073,41 +1203,340 @@
     'Sampler': 5, 'Bundle': 20, 'Box': 20
   };
 
-  // ============ STORAGE ============
+  // ============ SUPABASE LAYER ============
+
+  // Convert DB row (snake_case) → app shape (camelCase)
+  function dbToApp(row) {
+    return {
+      id: row.id,
+      cigar: row.cigar,
+      retailer: row.retailer,
+      type: row.type,
+      sticksPer: row.sticks_per,
+      qty: row.qty,
+      price: row.price !== null ? String(row.price) : '',
+      msrp: row.msrp !== null ? String(row.msrp) : '',
+      rating: row.rating,
+      ccRating: row.cc_rating,
+      ccLink: row.cc_link,
+      overview: row.overview,
+      notes: row.notes,
+      status: row.status || 'watching',
+      added: row.added_at ? new Date(row.added_at).getTime() : Date.now()
+    };
+  }
+
+  // Convert app shape (camelCase) → DB row (snake_case), excluding ID for inserts
+  function appToDb(c, includeId = false) {
+    const row = {
+      cigar: c.cigar,
+      retailer: c.retailer,
+      type: c.type,
+      sticks_per: c.sticksPer ? parseInt(c.sticksPer) : null,
+      qty: parseInt(c.qty) || 1,
+      price: c.price ? parseFloat(c.price) : null,
+      msrp: c.msrp ? parseFloat(c.msrp) : null,
+      rating: c.rating || null,
+      cc_rating: c.ccRating || null,
+      cc_link: c.ccLink || null,
+      overview: c.overview || null,
+      notes: c.notes || null,
+      status: c.status || 'watching',
+      updated_at: new Date().toISOString()
+    };
+    if (includeId && c.id) row.id = c.id;
+    return row;
+  }
+
+  // Initial load: try Supabase, fall back to cached
   async function loadState() {
+    setSyncState('connecting');
     try {
-      const res = await window.storage.get('watchlist-cigars');
+      // Try to fetch cigars and settings in parallel
+      const [cigarsRes, settingsRes] = await Promise.all([
+        supabase.from('cigars').select('*').order('added_at', { ascending: false }),
+        supabase.from('user_settings').select('*').eq('id', 1).single()
+      ]);
+
+      if (cigarsRes.error) throw cigarsRes.error;
+      // settings error is OK if row doesn't exist yet; we'll create defaults
+      cigars = (cigarsRes.data || []).map(dbToApp);
+
+      if (settingsRes.data) {
+        budget = parseFloat(settingsRes.data.budget_zar) || 0;
+        document.getElementById('budget-zar').value = budget || '';
+        dbUrl = settingsRes.data.ratings_db_url || '';
+      }
+
+      isOnline = true;
+      setSyncState('synced');
+      // Cache for offline fallback
+      await cacheLocally();
+      // Also load pending writes from local cache (in case page was closed offline)
+      await loadPendingWrites();
+      if (pendingWrites.length > 0) {
+        await flushPendingWrites();
+      }
+    } catch (err) {
+      console.error('Supabase load failed:', err);
+      isOnline = false;
+      setSyncState('offline');
+      showOfflineBanner(true);
+      // Load from local cache
+      await loadFromCache();
+      // Start auto-reconnect
+      startReconnectLoop();
+    }
+    // Always load ratings DB cache (separate from Supabase)
+    await loadRatingsDBCache();
+  }
+
+  async function loadFromCache() {
+    try {
+      const res = await window.storage.get('watchlist-cache-cigars');
       if (res && res.value) cigars = JSON.parse(res.value);
-    } catch(e) { /* no data yet */ }
+    } catch(e) {}
     try {
-      const res = await window.storage.get('watchlist-budget');
+      const res = await window.storage.get('watchlist-cache-budget');
       if (res && res.value) {
         budget = parseFloat(res.value);
         document.getElementById('budget-zar').value = budget || '';
       }
-    } catch(e) { /* no data yet */ }
+    } catch(e) {}
     try {
       const res = await window.storage.get('watchlist-db-url');
       if (res && res.value) dbUrl = res.value;
-    } catch(e) { /* no data yet */ }
+    } catch(e) {}
+    await loadPendingWrites();
+  }
+
+  async function loadRatingsDBCache() {
     try {
       const res = await window.storage.get('watchlist-db-cache');
       if (res && res.value) ratingsDB = JSON.parse(res.value);
-    } catch(e) { /* no cached database */ }
+    } catch(e) {}
   }
 
-  async function saveCigars() {
+  async function loadPendingWrites() {
     try {
-      await window.storage.set('watchlist-cigars', JSON.stringify(cigars));
-    } catch(e) {
-      showToast('Save failed: ' + e.message);
+      const res = await window.storage.get('watchlist-pending-writes');
+      if (res && res.value) {
+        pendingWrites = JSON.parse(res.value);
+        pendingRowIds = new Set(pendingWrites.filter(w => w.table === 'cigars' && w.data && w.data.id).map(w => w.data.id));
+        if (pendingWrites.length > 0 && isOnline) {
+          setSyncState('pending');
+        }
+      }
+    } catch(e) {}
+  }
+
+  async function cacheLocally() {
+    try { await window.storage.set('watchlist-cache-cigars', JSON.stringify(cigars)); } catch(e) {}
+    try { await window.storage.set('watchlist-cache-budget', String(budget)); } catch(e) {}
+  }
+
+  async function persistPendingWrites() {
+    try { await window.storage.set('watchlist-pending-writes', JSON.stringify(pendingWrites)); } catch(e) {}
+  }
+
+  // ============ WRITE OPERATIONS ============
+  // Each write: optimistic UI update, attempt Supabase, queue on failure
+
+  async function dbInsertCigar(c) {
+    const row = appToDb(c, true); // include ID so optimistic UI matches DB
+    if (!isOnline) {
+      pendingWrites.push({ op: 'insert', table: 'cigars', data: { ...row }, ts: Date.now() });
+      pendingRowIds.add(c.id);
+      await persistPendingWrites();
+      setSyncState('pending');
+      return;
+    }
+    setSyncState('saving');
+    const { error } = await supabase.from('cigars').insert(row);
+    if (error) {
+      await handleWriteFailure({ op: 'insert', table: 'cigars', data: row });
+      pendingRowIds.add(c.id);
+    } else {
+      await cacheLocally();
+      setSyncState(pendingWrites.length > 0 ? 'pending' : 'synced');
     }
   }
 
-  async function saveBudget() {
+  async function dbUpdateCigar(c) {
+    const row = appToDb(c, false);
+    if (!isOnline) {
+      pendingWrites.push({ op: 'update', table: 'cigars', id: c.id, data: row, ts: Date.now() });
+      pendingRowIds.add(c.id);
+      await persistPendingWrites();
+      setSyncState('pending');
+      return;
+    }
+    setSyncState('saving');
+    const { error } = await supabase.from('cigars').update(row).eq('id', c.id);
+    if (error) {
+      await handleWriteFailure({ op: 'update', table: 'cigars', id: c.id, data: row });
+      pendingRowIds.add(c.id);
+    } else {
+      await cacheLocally();
+      setSyncState(pendingWrites.length > 0 ? 'pending' : 'synced');
+    }
+  }
+
+  async function dbDeleteCigar(id) {
+    if (!isOnline) {
+      pendingWrites.push({ op: 'delete', table: 'cigars', id, ts: Date.now() });
+      await persistPendingWrites();
+      setSyncState('pending');
+      return;
+    }
+    setSyncState('saving');
+    const { error } = await supabase.from('cigars').delete().eq('id', id);
+    if (error) {
+      await handleWriteFailure({ op: 'delete', table: 'cigars', id });
+    } else {
+      pendingRowIds.delete(id);
+      await cacheLocally();
+      setSyncState(pendingWrites.length > 0 ? 'pending' : 'synced');
+    }
+  }
+
+  async function dbUpdateSettings(patch) {
+    if (!isOnline) {
+      pendingWrites.push({ op: 'update', table: 'user_settings', id: 1, data: patch, ts: Date.now() });
+      await persistPendingWrites();
+      setSyncState('pending');
+      return;
+    }
+    setSyncState('saving');
+    const { error } = await supabase.from('user_settings').update({ ...patch, updated_at: new Date().toISOString() }).eq('id', 1);
+    if (error) {
+      await handleWriteFailure({ op: 'update', table: 'user_settings', id: 1, data: patch });
+    } else {
+      await cacheLocally();
+      setSyncState(pendingWrites.length > 0 ? 'pending' : 'synced');
+    }
+  }
+
+  async function handleWriteFailure(write) {
+    console.error('Write failed, queuing:', write);
+    isOnline = false;
+    pendingWrites.push({ ...write, ts: Date.now() });
+    await persistPendingWrites();
+    setSyncState('offline');
+    showOfflineBanner(true);
+    startReconnectLoop();
+  }
+
+  async function flushPendingWrites() {
+    if (pendingWrites.length === 0) return;
+    setSyncState('saving');
+    const toFlush = [...pendingWrites];
+    pendingWrites = [];
+    await persistPendingWrites();
+
+    for (const w of toFlush) {
+      try {
+        if (w.op === 'insert') {
+          const { error } = await supabase.from(w.table).insert(w.data);
+          if (error) throw error;
+          if (w.data && w.data.id) pendingRowIds.delete(w.data.id);
+        } else if (w.op === 'update') {
+          const { error } = await supabase.from(w.table).update(w.data).eq('id', w.id);
+          if (error) throw error;
+          pendingRowIds.delete(w.id);
+        } else if (w.op === 'delete') {
+          const { error } = await supabase.from(w.table).delete().eq('id', w.id);
+          if (error) throw error;
+        }
+      } catch (err) {
+        // Re-queue and bail
+        console.error('Flush failed:', err);
+        pendingWrites.push(w, ...toFlush.slice(toFlush.indexOf(w) + 1));
+        await persistPendingWrites();
+        setSyncState('offline');
+        return;
+      }
+    }
+    setSyncState('synced');
+    showToast('Synced ' + toFlush.length + ' pending change' + (toFlush.length !== 1 ? 's' : ''));
+    render();
+  }
+
+  // ============ CONNECTION MANAGEMENT ============
+  function setSyncState(state) {
+    syncState = state;
+    const el = document.getElementById('sync-status');
+    const label = document.getElementById('sync-label');
+    if (!el || !label) return;
+    el.classList.remove('connecting', 'synced', 'saving', 'offline', 'pending');
+    label.classList.remove('synced', 'saving', 'offline', 'pending');
+    el.classList.add(state);
+    label.classList.add(state);
+    const labels = {
+      connecting: 'Connecting...',
+      synced: 'Synced',
+      saving: 'Saving...',
+      offline: 'Offline',
+      pending: `Pending (${pendingWrites.length})`
+    };
+    label.textContent = labels[state] || state;
+  }
+
+  function showOfflineBanner(show) {
+    document.getElementById('offline-banner').classList.toggle('active', show);
+  }
+
+  async function checkConnection() {
     try {
-      await window.storage.set('watchlist-budget', String(budget));
-    } catch(e) { /* ignore */ }
+      const { error } = await supabase.from('user_settings').select('id').eq('id', 1).single();
+      if (!error) {
+        isOnline = true;
+        showOfflineBanner(false);
+        stopReconnectLoop();
+        // Refetch fresh state from server
+        const { data: cigarsData, error: cErr } = await supabase.from('cigars').select('*').order('added_at', { ascending: false });
+        if (!cErr) {
+          cigars = (cigarsData || []).map(dbToApp);
+          await cacheLocally();
+        }
+        // Flush queued writes
+        if (pendingWrites.length > 0) {
+          await flushPendingWrites();
+        } else {
+          setSyncState('synced');
+        }
+        render();
+        return true;
+      }
+    } catch (e) {
+      isOnline = false;
+    }
+    return false;
+  }
+
+  function startReconnectLoop() {
+    if (reconnectInterval) return;
+    reconnectInterval = setInterval(async () => {
+      const ok = await checkConnection();
+      if (ok) stopReconnectLoop();
+    }, 30000); // 30 seconds
+  }
+
+  function stopReconnectLoop() {
+    if (reconnectInterval) {
+      clearInterval(reconnectInterval);
+      reconnectInterval = null;
+    }
+  }
+
+  async function manualReconnect() {
+    if (isOnline && pendingWrites.length === 0) {
+      showToast('Already connected');
+      return;
+    }
+    showToast('Reconnecting...');
+    const ok = await checkConnection();
+    if (!ok) showToast('Still offline. Will keep retrying in background.');
   }
 
   // ============ FX ============
@@ -1279,12 +1708,13 @@
     const usFlag = isUSRetailer(c.retailer);
     const aligned = isAligned(c.rating, c.ccRating);
     const ccTier = detectTierFromCCRating(c.ccRating);
+    const isPending = pendingRowIds.has(c.id);
 
     return `
       <div class="card status-${status}">
         <div class="card-head">
           <div class="card-title-block">
-            <div class="card-title">${escape(c.cigar || 'Untitled')}</div>
+            <div class="card-title">${escape(c.cigar || 'Untitled')}${isPending ? '<span class="pending-pill">Pending sync</span>' : ''}</div>
             <div class="card-meta">
               <span class="retailer">${escape(c.retailer || '—')}</span>
               <span>${escape(c.type || '—')}${c.qty > 1 ? ' &times; ' + c.qty : ''}</span>
@@ -1469,17 +1899,21 @@
 
     if (editingId) {
       const idx = cigars.findIndex(c => c.id === editingId);
-      if (idx >= 0) cigars[idx] = { ...cigars[idx], ...data };
+      if (idx >= 0) {
+        cigars[idx] = { ...cigars[idx], ...data };
+        await dbUpdateCigar(cigars[idx]);
+      }
       showToast('Updated');
     } else {
-      data.id = 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+      // Generate UUID client-side so optimistic UI works
+      data.id = crypto.randomUUID();
       data.added = Date.now();
       data.status = 'watching';
-      cigars.push(data);
+      cigars.unshift(data); // newest first
+      await dbInsertCigar(data);
       showToast('Added to watchlist');
     }
 
-    await saveCigars();
     closeModal();
     render();
   }
@@ -1487,7 +1921,7 @@
   async function deleteCigar(id) {
     if (!confirm('Remove this cigar from your watchlist?')) return;
     cigars = cigars.filter(c => c.id !== id);
-    await saveCigars();
+    await dbDeleteCigar(id);
     showToast('Removed');
     render();
   }
@@ -1497,15 +1931,19 @@
     if (!c) return;
     const next = { watching: 'ready', ready: 'bought', bought: 'watching' };
     c.status = next[c.status || 'watching'];
-    await saveCigars();
+    await dbUpdateCigar(c);
     render();
   }
 
-  // Budget input
-  document.getElementById('budget-zar').addEventListener('input', async (e) => {
+  // Budget input (debounced to avoid spamming Supabase on every keystroke)
+  let budgetSaveTimer = null;
+  document.getElementById('budget-zar').addEventListener('input', (e) => {
     budget = parseFloat(e.target.value) || 0;
-    await saveBudget();
     updateBudget();
+    clearTimeout(budgetSaveTimer);
+    budgetSaveTimer = setTimeout(async () => {
+      await dbUpdateSettings({ budget_zar: budget });
+    }, 800);
   });
 
   function showToast(msg) {
@@ -1730,7 +2168,8 @@
     const newUrl = document.getElementById('f-db-url').value.trim();
     const urlChanged = newUrl !== dbUrl;
     dbUrl = newUrl;
-    try { await window.storage.set('watchlist-db-url', dbUrl); } catch(e) {}
+    try { await window.storage.set('watchlist-db-url', dbUrl); } catch(e) {} // also cache locally
+    await dbUpdateSettings({ ratings_db_url: dbUrl });
     if (urlChanged && dbUrl) {
       showToast('Loading database...');
       const ok = await loadRatingsDB();
@@ -1770,9 +2209,10 @@
 
   // ============ INIT ============
   (async function init() {
-    await loadState();
+    setSyncState('connecting');
     await loadFXRate();
-    // Update DB indicator from cached state, then try fetching fresh
+    await loadState(); // handles both Supabase load and local cache fallback
+    // Update ratings DB indicator
     updateDBStatusIndicator(
       dbUrl ? (ratingsDB.ratings && ratingsDB.ratings.length ? 'success' : 'empty') : 'empty',
       dbUrl ? (ratingsDB.ratings && ratingsDB.ratings.length ? 'Connected (cached)' : 'Not loaded') : 'Not configured'
