@@ -2093,34 +2093,45 @@
       return;
     }
 
-    const results = fuseIndex.search(query, { limit: 8 });
+    const results = fuseIndex.search(query, { limit: 20 }); // fetch more, we'll trim after logic
 
     if (results.length === 0) {
       hideAutocomplete();
       return;
     }
 
-    // Single high-confidence match: auto-fill silently, no dropdown
-    if (results.length === 1 && results[0].score <= HIGH_CONFIDENCE_SCORE) {
-      selectResult(results[0].item);
+    // Only show results within a reasonable score band of the best result
+    // (prevents very weak tail matches polluting the list)
+    const bestScore = results[0].score;
+    const SCORE_BAND = 0.3; // include results within 0.3 of the best score
+    const relevant = results
+      .filter(r => r.score <= bestScore + SCORE_BAND)
+      .slice(0, 10);
+
+    // Auto-fill ONLY when:
+    // 1. Exactly one relevant result exists
+    // 2. It's high confidence (score ≤ 0.15)
+    // 3. No other result is within a 0.2 score gap (i.e. no close siblings)
+    const noCloseSiblings = results.length < 2 || (results[1].score - results[0].score) > 0.2;
+    if (relevant.length === 1 && relevant[0].score <= HIGH_CONFIDENCE_SCORE && noCloseSiblings) {
+      selectResult(relevant[0].item);
       hideAutocomplete();
       return;
     }
 
     // Multiple results (or single but not confident enough): show dropdown
     autocompleteHighlight = -1;
-    list.innerHTML = results.map((result, i) => {
+    list.innerHTML = relevant.map((result, i) => {
       const r = result.item;
       const fullName = r.full_name || `${r.brand || ''} ${r.blend || ''} ${r.vitola || ''}`.trim();
       const tier = r.tier || '';
       const tierLabel = r.tier_label || TIER_TO_USER[tier] || '';
-      // Confidence indicator: score 0=perfect, 0.4=threshold
       const confidence = Math.round((1 - result.score) * 100);
       return `
         <div class="autocomplete-item" data-idx="${i}" onmousedown="selectAutocompleteByIdx(${i})">
           <div class="autocomplete-name">${escape(fullName)}</div>
           <div class="autocomplete-meta">
-            ${tier ? `<span class="autocomplete-tier-pill">${escape(tier)}</span>` : ''}
+            ${tier ? `<span class="autocomplete-tier-pill">${escape(TIER_DISPLAY[tier] || tier)}</span>` : ''}
             ${tierLabel ? `<span>${escape(tierLabel)}</span>` : ''}
             ${r.review_date ? `<span>&middot; ${escape(r.review_date)}</span>` : ''}
             <span style="margin-left:auto;color:var(--text-muted);font-family:var(--mono-font)">${confidence}% match</span>
@@ -2129,7 +2140,7 @@
       `;
     }).join('');
     list.classList.add('active');
-    list._results = results;
+    list._results = relevant;
   }
 
   function onCigarKeydown(e) {
