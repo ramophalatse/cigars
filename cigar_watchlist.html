@@ -1026,7 +1026,7 @@ function updateBudget() {
   fill.style.width = Math.min(100,pct)+'%';
   fill.classList.toggle('over', pct>100);
   document.getElementById('progress-pct').textContent = budget>0
-    ? pct.toFixed(0)+'% of budget used'+(pct>100?' (over by '+fmtZAR(Math.abs(remaining))+')')
+    ? pct.toFixed(0)+'% of budget used'+(pct>100?' (over by '+fmtZAR(Math.abs(remaining))+')':'')
     : 'Set a budget to track spending';
 }
 
