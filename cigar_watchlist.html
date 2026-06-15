@@ -11,893 +11,237 @@
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js"></script>
 <style>
   :root {
-    --bg-deep: #0e0c0a;
-    --bg-card: #16130f;
-    --bg-elevated: #1d1915;
-    --bg-input: #211c17;
-    --border: #2a241e;
-    --border-strong: #3a3128;
-    --text-primary: #f5ead8;
-    --text-secondary: #b8a98f;
-    --text-muted: #7a6e5a;
-    --accent: #c9a96e;
-    --accent-hover: #dcbb7a;
-    --accent-dim: #8a7548;
-    --success: #7fa66f;
-    --warning: #d4a04a;
-    --danger: #c4634c;
-    --legendary: #d4af37;
-    --banger: #c9a96e;
-    --solid: #9c8b6e;
-    --hmm: #8a7e6a;
-    --no: #a05c4e;
-    --dafuk: #6b3a32;
+    --bg-deep: #0e0c0a; --bg-card: #16130f; --bg-elevated: #1d1915; --bg-input: #211c17;
+    --border: #2a241e; --border-strong: #3a3128;
+    --text-primary: #f5ead8; --text-secondary: #b8a98f; --text-muted: #7a6e5a;
+    --accent: #c9a96e; --accent-hover: #dcbb7a; --accent-dim: #8a7548;
+    --success: #7fa66f; --warning: #d4a04a; --danger: #c4634c;
+    --legendary: #d4af37; --banger: #c9a96e; --solid: #9c8b6e;
+    --hmm: #8a7e6a; --no: #a05c4e; --dafuk: #6b3a32;
     --display-font: 'Playfair Display', Georgia, serif;
     --body-font: 'Inter', -apple-system, sans-serif;
     --mono-font: 'JetBrains Mono', 'SF Mono', monospace;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
   body {
     background: var(--bg-deep);
-    background-image:
-      radial-gradient(circle at 20% 0%, rgba(201, 169, 110, 0.06) 0%, transparent 50%),
-      radial-gradient(circle at 80% 100%, rgba(122, 110, 90, 0.05) 0%, transparent 50%);
-    color: var(--text-primary);
-    font-family: var(--body-font);
-    min-height: 100vh;
-    line-height: 1.5;
-    padding: 32px 24px 80px;
+    background-image: radial-gradient(circle at 20% 0%, rgba(201,169,110,.06) 0%, transparent 50%),
+                      radial-gradient(circle at 80% 100%, rgba(122,110,90,.05) 0%, transparent 50%);
+    color: var(--text-primary); font-family: var(--body-font);
+    min-height: 100vh; line-height: 1.5; padding: 32px 24px 80px;
   }
-
   .container { max-width: 1400px; margin: 0 auto; }
 
   /* Header */
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    padding-bottom: 24px;
-    margin-bottom: 32px;
-    border-bottom: 1px solid var(--border);
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-  .header-title h1 {
-    font-family: var(--display-font);
-    font-size: 38px;
-    font-weight: 600;
-    letter-spacing: -0.5px;
-    line-height: 1.1;
-  }
-  .header-title h1 em {
-    color: var(--accent);
-    font-style: italic;
-  }
-  .header-title p {
-    color: var(--text-muted);
-    font-size: 13px;
-    margin-top: 6px;
-    letter-spacing: 0.3px;
-  }
-  .fx-display {
-    text-align: right;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 18px;
-    min-width: 220px;
-  }
-  .fx-label {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--text-muted);
-    margin-bottom: 4px;
-  }
-  .fx-rate {
-    font-family: var(--mono-font);
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--accent);
-  }
-  .fx-time {
-    font-size: 10px;
-    color: var(--text-muted);
-    margin-top: 2px;
-    font-family: var(--mono-font);
-  }
-  .fx-refresh {
-    background: none;
-    border: 1px solid var(--border-strong);
-    color: var(--accent);
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 10px;
-    cursor: pointer;
-    margin-top: 6px;
-    font-family: var(--body-font);
-    transition: all 0.2s;
-  }
+  .header { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 24px; margin-bottom: 32px; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 16px; }
+  .header-title h1 { font-family: var(--display-font); font-size: 38px; font-weight: 600; letter-spacing: -0.5px; line-height: 1.1; }
+  .header-title h1 em { color: var(--accent); font-style: italic; }
+  .header-title p { color: var(--text-muted); font-size: 13px; margin-top: 6px; letter-spacing: 0.3px; }
+  .back-btn { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid var(--border-strong); color: var(--text-secondary); padding: 7px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-family: var(--body-font); font-weight: 500; transition: all 0.2s; margin-bottom: 10px; }
+  .back-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .detail-watchlist-title { display: flex; align-items: center; gap: 8px; }
+  .detail-watchlist-title h2 { font-family: var(--display-font); font-size: 30px; font-weight: 600; }
+  .header-tools { display: flex; align-items: flex-start; gap: 12px; }
+  .fx-display { text-align: right; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 12px 18px; min-width: 220px; }
+  .fx-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 4px; }
+  .fx-rate { font-family: var(--mono-font); font-size: 18px; font-weight: 600; color: var(--accent); }
+  .fx-time { font-size: 10px; color: var(--text-muted); margin-top: 2px; font-family: var(--mono-font); }
+  .fx-refresh { background: none; border: 1px solid var(--border-strong); color: var(--accent); padding: 3px 8px; border-radius: 4px; font-size: 10px; cursor: pointer; margin-top: 6px; font-family: var(--body-font); transition: all 0.2s; }
   .fx-refresh:hover { background: var(--accent); color: var(--bg-deep); }
 
   /* Budget panel */
-  .budget-panel {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 32px;
-  }
-  .budget-row {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 24px;
-    align-items: center;
-  }
+  .budget-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 32px; }
+  .budget-row { display: grid; grid-template-columns: 1fr 2fr; gap: 24px; align-items: center; }
   .budget-input-group { display: flex; flex-direction: column; gap: 8px; }
-  .budget-label {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--text-secondary);
-  }
-  .budget-input-wrap {
-    display: flex;
-    align-items: center;
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 0 12px;
-    transition: border-color 0.2s;
-  }
+  .budget-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); }
+  .budget-input-wrap { display: flex; align-items: center; background: var(--bg-input); border: 1px solid var(--border); border-radius: 6px; padding: 0 12px; transition: border-color 0.2s; }
   .budget-input-wrap:focus-within { border-color: var(--accent); }
-  .budget-input-prefix {
-    font-family: var(--mono-font);
-    color: var(--text-muted);
-    padding-right: 8px;
-  }
-  .budget-input-wrap input {
-    background: transparent;
-    border: none;
-    color: var(--text-primary);
-    padding: 10px 0;
-    font-family: var(--mono-font);
-    font-size: 16px;
-    font-weight: 500;
-    flex: 1;
-    outline: none;
-    width: 100%;
-  }
-
+  .budget-input-prefix { font-family: var(--mono-font); color: var(--text-muted); padding-right: 8px; }
+  .budget-input-wrap input { background: transparent; border: none; color: var(--text-primary); padding: 10px 0; font-family: var(--mono-font); font-size: 16px; font-weight: 500; flex: 1; outline: none; width: 100%; }
   .progress-section { display: flex; flex-direction: column; gap: 10px; }
-  .progress-stats {
-    display: flex;
-    justify-content: space-between;
-    font-family: var(--mono-font);
-    font-size: 13px;
-  }
+  .progress-stats { display: flex; justify-content: space-between; font-family: var(--mono-font); font-size: 13px; }
   .progress-stats .spent { color: var(--text-primary); }
   .progress-stats .remaining { color: var(--text-secondary); }
-  .progress-bar {
-    height: 10px;
-    background: var(--bg-input);
-    border-radius: 5px;
-    overflow: hidden;
-    position: relative;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent-dim), var(--accent));
-    transition: width 0.4s ease, background 0.3s;
-    border-radius: 5px;
-  }
+  .progress-bar { height: 10px; background: var(--bg-input); border-radius: 5px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-dim), var(--accent)); transition: width 0.4s ease, background 0.3s; border-radius: 5px; }
   .progress-fill.over { background: linear-gradient(90deg, var(--warning), var(--danger)); }
 
-  /* Section */
-  .section-title {
-    font-family: var(--display-font);
-    font-size: 22px;
-    font-weight: 600;
-    margin-bottom: 16px;
-    color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .section-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
+  /* Actual costs section */
+  .actual-costs { border-top: 1px solid var(--border); padding-top: 20px; margin-top: 20px; }
+  .actual-costs-header { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); font-weight: 600; margin-bottom: 14px; }
+  .actual-costs-hint { font-size: 11px; color: var(--text-muted); text-transform: none; letter-spacing: 0; margin-left: 10px; font-weight: 400; }
+  .actual-costs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .actual-costs-grid .budget-input-wrap input { font-size: 14px; }
 
-  /* Add form */
-  .add-form {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 32px;
-  }
-  .form-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-  }
+  /* Section */
+  .section-title { font-family: var(--display-font); font-size: 22px; font-weight: 600; margin-bottom: 16px; color: var(--text-primary); display: flex; align-items: center; gap: 12px; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* Home view */
+  .watchlist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+  .watchlist-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; cursor: pointer; transition: border-color 0.2s, transform 0.15s; }
+  .watchlist-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .watchlist-card.status-ordered { border-left: 3px solid var(--success); }
+  .watchlist-card.status-delivered { border-left: 3px solid var(--accent-dim); opacity: 0.75; }
+  .wl-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+  .wl-card-title { font-family: var(--display-font); font-size: 18px; font-weight: 600; line-height: 1.2; }
+  .wl-card-actions { display: flex; gap: 4px; align-items: center; flex-shrink: 0; }
+  .wl-card-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 12px 20px; padding: 14px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+  .wl-mini-progress { height: 4px; background: var(--bg-input); border-radius: 2px; overflow: hidden; margin: 6px 0 4px; }
+  .wl-mini-fill { height: 100%; background: linear-gradient(90deg, var(--accent-dim), var(--accent)); border-radius: 2px; }
+  .wl-mini-fill.over { background: linear-gradient(90deg, var(--warning), var(--danger)); }
+  .wl-card-footer { display: flex; justify-content: space-between; align-items: center; }
+  .wl-card-date { font-size: 11px; color: var(--text-muted); font-family: var(--mono-font); }
+  .wl-card-notes { font-size: 11px; color: var(--text-muted); font-style: italic; max-width: 60%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+  /* Form / buttons */
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
   .form-grid.full { grid-template-columns: 1fr; }
   .field { display: flex; flex-direction: column; gap: 6px; }
-  .field label {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--text-secondary);
-    font-weight: 500;
-  }
-  .field input, .field select, .field textarea {
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 10px 12px;
-    color: var(--text-primary);
-    font-family: var(--body-font);
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
+  .field label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); font-weight: 500; }
+  .field input, .field select, .field textarea { background: var(--bg-input); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; color: var(--text-primary); font-family: var(--body-font); font-size: 14px; outline: none; transition: border-color 0.2s; }
   .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); }
-  .field input[type="number"], .field .num { font-family: var(--mono-font); }
-  .field textarea { resize: vertical; min-height: 60px; font-family: var(--body-font); }
-  .field select {
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23b8a98f' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    padding-right: 32px;
-  }
+  .field input[type="number"] { font-family: var(--mono-font); }
+  .field textarea { resize: vertical; min-height: 60px; }
+  .field select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23b8a98f' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
   .form-actions { display: flex; gap: 12px; margin-top: 20px; justify-content: flex-end; }
-  .btn {
-    padding: 10px 22px;
-    border-radius: 6px;
-    border: none;
-    font-family: var(--body-font);
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    letter-spacing: 0.3px;
-  }
-  .btn-primary {
-    background: var(--accent);
-    color: var(--bg-deep);
-  }
+  .btn { padding: 10px 22px; border-radius: 6px; border: none; font-family: var(--body-font); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; letter-spacing: 0.3px; }
+  .btn-primary { background: var(--accent); color: var(--bg-deep); }
   .btn-primary:hover { background: var(--accent-hover); }
-  .btn-secondary {
-    background: transparent;
-    color: var(--text-secondary);
-    border: 1px solid var(--border-strong);
-  }
+  .btn-secondary { background: transparent; color: var(--text-secondary); border: 1px solid var(--border-strong); }
   .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
-  .btn-danger {
-    background: transparent;
-    color: var(--danger);
-    border: 1px solid var(--danger);
-  }
+  .btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); }
   .btn-danger:hover { background: var(--danger); color: var(--bg-deep); }
-  .btn-icon {
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    padding: 4px 8px;
-    font-size: 14px;
-    transition: color 0.2s;
-  }
+  .btn-icon { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 4px 8px; font-size: 14px; transition: color 0.2s; }
   .btn-icon:hover { color: var(--accent); }
   .btn-icon.danger:hover { color: var(--danger); }
 
-  /* Filters bar */
-  .filters {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 16px;
-    align-items: center;
-    flex-wrap: wrap;
-    padding: 14px 16px;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-  }
+  /* Filters */
+  .filters { display: flex; gap: 12px; margin-bottom: 16px; align-items: center; flex-wrap: wrap; padding: 14px 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; }
   .filter-group { display: flex; align-items: center; gap: 8px; }
-  .filter-group label {
-    font-size: 11px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    letter-spacing: 1px;
-  }
-  .filter-group select {
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-    color: var(--text-primary);
-    padding: 6px 28px 6px 10px;
-    border-radius: 4px;
-    font-size: 12px;
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 12 8'%3E%3Cpath fill='%23b8a98f' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-  }
-  .count-badge {
-    margin-left: auto;
-    font-size: 11px;
-    color: var(--text-muted);
-    font-family: var(--mono-font);
-  }
+  .filter-group label { font-size: 11px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px; }
+  .filter-group select { background: var(--bg-input); border: 1px solid var(--border); color: var(--text-primary); padding: 6px 28px 6px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 12 8'%3E%3Cpath fill='%23b8a98f' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; }
+  .count-badge { font-size: 11px; color: var(--text-muted); font-family: var(--mono-font); margin-bottom: 12px; }
 
   /* Cards */
   .cards { display: grid; gap: 16px; }
-  .card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 20px 24px;
-    transition: border-color 0.2s, transform 0.2s;
-    position: relative;
-  }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; transition: border-color 0.2s; position: relative; }
   .card:hover { border-color: var(--border-strong); }
   .card.status-bought { opacity: 0.55; }
   .card.status-ready { border-left: 3px solid var(--success); }
-  .card.inactive {
-    opacity: 0.4;
-    filter: grayscale(0.4);
-    border-style: dashed;
-  }
+  .card.inactive { opacity: 0.4; filter: grayscale(0.4); border-style: dashed; }
   .card.inactive .card-title { text-decoration: line-through; text-decoration-color: var(--text-muted); }
-
-  .toggle-active-btn {
-    background: none;
-    border: 1px solid var(--border-strong);
-    border-radius: 4px;
-    color: var(--text-muted);
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 4px 8px;
-    cursor: pointer;
-    font-family: var(--body-font);
-    font-weight: 600;
-    transition: all 0.2s;
-    white-space: nowrap;
-  }
+  .toggle-active-btn { background: none; border: 1px solid var(--border-strong); border-radius: 4px; color: var(--text-muted); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; padding: 4px 8px; cursor: pointer; font-family: var(--body-font); font-weight: 600; transition: all 0.2s; white-space: nowrap; }
   .toggle-active-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .toggle-active-btn.is-inactive {
-    border-color: var(--danger);
-    color: var(--danger);
-  }
-  .toggle-active-btn.is-inactive:hover {
-    background: var(--danger);
-    color: var(--bg-deep);
-  }
-
-  .card-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 16px;
-    margin-bottom: 14px;
-    flex-wrap: wrap;
-  }
+  .toggle-active-btn.is-inactive { border-color: var(--danger); color: var(--danger); }
+  .toggle-active-btn.is-inactive:hover { background: var(--danger); color: var(--bg-deep); }
+  .card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 14px; flex-wrap: wrap; }
   .card-title-block { flex: 1; min-width: 200px; }
-  .card-title {
-    font-family: var(--display-font);
-    font-size: 20px;
-    font-weight: 600;
-    line-height: 1.2;
-    margin-bottom: 6px;
-  }
-  .card-meta {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    font-size: 12px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-  }
-  .card-meta span {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+  .card-title { font-family: var(--display-font); font-size: 20px; font-weight: 600; line-height: 1.2; margin-bottom: 6px; }
+  .card-meta { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; }
+  .card-meta span { display: flex; align-items: center; gap: 6px; }
   .card-meta .retailer { color: var(--accent); }
-
   .card-actions { display: flex; gap: 4px; align-items: center; }
-  .status-pill {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 4px 10px;
-    border-radius: 12px;
-    background: var(--bg-input);
-    border: 1px solid var(--border-strong);
-    color: var(--text-secondary);
-    cursor: pointer;
-    font-family: var(--body-font);
-    transition: all 0.2s;
-  }
-  .status-pill.watching { color: var(--text-secondary); }
-  .status-pill.ready { color: var(--success); border-color: var(--success); }
+  .status-pill { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; padding: 4px 10px; border-radius: 12px; background: var(--bg-input); border: 1px solid var(--border-strong); color: var(--text-secondary); cursor: pointer; font-family: var(--body-font); transition: all 0.2s; }
+  .status-pill.watching, .status-pill.planning { color: var(--text-secondary); }
+  .status-pill.ready, .status-pill.ordered { color: var(--success); border-color: var(--success); }
   .status-pill.bought { color: var(--text-muted); }
-
-  .card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 16px 24px;
-    padding: 14px 0;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-  }
+  .status-pill.delivered { color: var(--accent-dim); border-color: var(--accent-dim); }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px 24px; padding: 14px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
   .stat { display: flex; flex-direction: column; gap: 4px; }
-  .stat-label {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-    color: var(--text-muted);
-  }
-  .stat-value {
-    font-family: var(--mono-font);
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--text-primary);
-  }
+  .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-muted); }
+  .stat-value { font-family: var(--mono-font); font-size: 15px; font-weight: 500; color: var(--text-primary); }
   .stat-value.accent { color: var(--accent); }
   .stat-value.success { color: var(--success); }
   .stat-value.warning { color: var(--warning); }
   .stat-value.muted { color: var(--text-muted); font-size: 13px; }
-  .stat-sub {
-    font-size: 11px;
-    color: var(--text-muted);
-    font-family: var(--mono-font);
-  }
-
-  .rating-pill {
-    display: inline-flex;
-    align-items: center;
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    font-family: var(--body-font);
-  }
-  .rating-pill.legendary { background: rgba(212, 175, 55, 0.15); color: var(--legendary); border: 1px solid rgba(212, 175, 55, 0.4); }
-  .rating-pill.banger { background: rgba(201, 169, 110, 0.15); color: var(--banger); border: 1px solid rgba(201, 169, 110, 0.4); }
-  .rating-pill.solid { background: rgba(156, 139, 110, 0.15); color: var(--solid); border: 1px solid rgba(156, 139, 110, 0.4); }
-  .rating-pill.hmm { background: rgba(138, 126, 106, 0.15); color: var(--hmm); border: 1px solid rgba(138, 126, 106, 0.4); }
-  .rating-pill.no { background: rgba(160, 92, 78, 0.15); color: var(--no); border: 1px solid rgba(160, 92, 78, 0.4); }
-  .rating-pill.dafuk { background: rgba(107, 58, 50, 0.15); color: var(--dafuk); border: 1px solid rgba(107, 58, 50, 0.4); }
-  .rating-pill.unrated { background: var(--bg-input); color: var(--text-muted); border: 1px solid var(--border); }
-
-  .card-extras {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    padding-top: 14px;
-  }
+  .stat-sub { font-size: 11px; color: var(--text-muted); font-family: var(--mono-font); }
+  .rating-pill { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; font-family: var(--body-font); }
+  .rating-pill.legendary { background: rgba(212,175,55,.15); color: var(--legendary); border: 1px solid rgba(212,175,55,.4); }
+  .rating-pill.banger    { background: rgba(201,169,110,.15); color: var(--banger); border: 1px solid rgba(201,169,110,.4); }
+  .rating-pill.solid     { background: rgba(156,139,110,.15); color: var(--solid); border: 1px solid rgba(156,139,110,.4); }
+  .rating-pill.hmm       { background: rgba(138,126,106,.15); color: var(--hmm); border: 1px solid rgba(138,126,106,.4); }
+  .rating-pill.no        { background: rgba(160,92,78,.15); color: var(--no); border: 1px solid rgba(160,92,78,.4); }
+  .rating-pill.dafuk     { background: rgba(107,58,50,.15); color: var(--dafuk); border: 1px solid rgba(107,58,50,.4); }
+  .rating-pill.unrated   { background: var(--bg-input); color: var(--text-muted); border: 1px solid var(--border); }
+  .card-extras { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding-top: 14px; }
   .extra-block { display: flex; flex-direction: column; gap: 6px; }
-  .extra-block .label {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-    color: var(--text-muted);
-  }
-  .extra-block .content {
-    font-size: 13px;
-    color: var(--text-secondary);
-    line-height: 1.5;
-    font-style: italic;
-    font-family: var(--display-font);
-  }
-  .extra-block .content.empty {
-    color: var(--text-muted);
-    opacity: 0.5;
-  }
-
-  .empty-state {
-    text-align: center;
-    padding: 80px 24px;
-    color: var(--text-muted);
-    background: var(--bg-card);
-    border: 1px dashed var(--border-strong);
-    border-radius: 12px;
-  }
-  .empty-state h3 {
-    font-family: var(--display-font);
-    font-size: 22px;
-    margin-bottom: 8px;
-    color: var(--text-secondary);
-  }
+  .extra-block .label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-muted); }
+  .extra-block .content { font-size: 13px; color: var(--text-secondary); line-height: 1.5; font-style: italic; font-family: var(--display-font); }
+  .extra-block .content.empty { color: var(--text-muted); opacity: 0.5; }
+  .empty-state { text-align: center; padding: 80px 24px; color: var(--text-muted); background: var(--bg-card); border: 1px dashed var(--border-strong); border-radius: 12px; }
+  .empty-state h3 { font-family: var(--display-font); font-size: 22px; margin-bottom: 8px; color: var(--text-secondary); }
   .empty-state p { font-size: 13px; }
 
   /* Totals */
-  .totals-bar {
-    background: var(--bg-elevated);
-    border: 1px solid var(--border-strong);
-    border-radius: 12px;
-    padding: 20px 28px;
-    margin-top: 24px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 24px;
-  }
+  .totals-bar { background: var(--bg-elevated); border: 1px solid var(--border-strong); border-radius: 12px; padding: 20px 28px; margin-top: 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 24px; }
   .total-cell { display: flex; flex-direction: column; gap: 4px; }
-  .total-cell .label {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--text-muted);
-  }
-  .total-cell .value {
-    font-family: var(--mono-font);
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--text-primary);
-  }
+  .total-cell .label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); }
+  .total-cell .value { font-family: var(--mono-font); font-size: 20px; font-weight: 600; color: var(--text-primary); }
   .total-cell .value.accent { color: var(--accent); }
-  .total-cell .sub {
-    font-family: var(--mono-font);
-    font-size: 12px;
-    color: var(--text-muted);
-  }
+  .total-cell .sub { font-family: var(--mono-font); font-size: 11px; color: var(--text-muted); }
+  .total-cell .sub.actual { color: var(--success); }
 
   /* Modal */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.7);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    padding: 24px;
-  }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 100; padding: 24px; }
   .modal-overlay.active { display: flex; }
-  .modal {
-    background: var(--bg-card);
-    border: 1px solid var(--border-strong);
-    border-radius: 12px;
-    max-width: 700px;
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-    padding: 28px;
-  }
-  .modal h2 {
-    font-family: var(--display-font);
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: var(--accent);
-  }
+  .modal { background: var(--bg-card); border: 1px solid var(--border-strong); border-radius: 12px; max-width: 700px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 28px; }
+  .modal h2 { font-family: var(--display-font); font-size: 24px; margin-bottom: 20px; color: var(--accent); }
 
   /* Toast */
-  .toast {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%) translateY(100px);
-    background: var(--bg-elevated);
-    border: 1px solid var(--accent);
-    color: var(--text-primary);
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-size: 13px;
-    transition: transform 0.3s ease;
-    z-index: 200;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-  }
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--bg-elevated); border: 1px solid var(--accent); color: var(--text-primary); padding: 12px 20px; border-radius: 8px; font-size: 13px; transition: transform 0.3s ease; z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
   .toast.show { transform: translateX(-50%) translateY(0); }
 
-  /* Settings icon button (top right of header) */
-  .header-tools {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-  }
-  .settings-btn {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    color: var(--text-secondary);
-    width: 42px;
-    height: 42px;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    font-size: 18px;
-    position: relative;
-  }
-  .settings-btn:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-  .settings-btn.has-status::after {
-    content: '';
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--success);
-  }
+  /* Sync / settings */
+  .settings-btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-secondary); width: 42px; height: 42px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-size: 18px; position: relative; }
+  .settings-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .settings-btn.has-status::after { content: ''; position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--success); }
   .settings-btn.has-status.error::after { background: var(--danger); }
   .settings-btn.has-status.empty::after { background: var(--warning); }
-
-  /* Sync status pill (next to settings cog) */
-  .sync-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 12px;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-size: 11px;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    height: 42px;
-  }
+  .sync-status { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; font-weight: 500; cursor: pointer; transition: all 0.2s; height: 42px; }
   .sync-status:hover { border-color: var(--accent); }
-  .sync-status .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--text-muted);
-    transition: background 0.3s;
-  }
+  .sync-status .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); transition: background 0.3s; }
   .sync-status.synced .dot { background: var(--success); box-shadow: 0 0 6px var(--success); }
-  .sync-status.saving .dot {
-    background: var(--accent);
-    animation: pulseDot 1s ease-in-out infinite;
-  }
+  .sync-status.saving .dot { background: var(--accent); animation: pulseDot 1s ease-in-out infinite; }
   .sync-status.offline .dot { background: var(--danger); }
-  .sync-status.pending .dot {
-    background: var(--warning);
-    animation: pulseDot 1.5s ease-in-out infinite;
-  }
-  @keyframes pulseDot {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
-  }
+  .sync-status.pending .dot { background: var(--warning); animation: pulseDot 1.5s ease-in-out infinite; }
+  @keyframes pulseDot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
   .sync-status .label.synced { color: var(--success); }
   .sync-status .label.saving { color: var(--accent); }
   .sync-status .label.offline { color: var(--danger); }
   .sync-status .label.pending { color: var(--warning); }
-  .sync-status .pending-count {
-    font-family: var(--mono-font);
-    font-weight: 600;
-    color: var(--warning);
-  }
-
-  /* Offline banner */
-  .offline-banner {
-    background: rgba(196, 99, 76, 0.15);
-    border: 1px solid var(--danger);
-    border-radius: 8px;
-    padding: 12px 18px;
-    margin-bottom: 20px;
-    display: none;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
+  .offline-banner { background: rgba(196,99,76,.15); border: 1px solid var(--danger); border-radius: 8px; padding: 12px 18px; margin-bottom: 20px; display: none; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
   .offline-banner.active { display: flex; }
-  .offline-banner-text {
-    font-size: 13px;
-    color: var(--text-primary);
-  }
+  .offline-banner-text { font-size: 13px; color: var(--text-primary); }
   .offline-banner-text strong { color: var(--danger); }
-  .offline-banner button {
-    background: var(--danger);
-    color: var(--bg-deep);
-    border: none;
-    padding: 6px 14px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: var(--body-font);
-  }
-
-  /* Pending sync pill on card */
-  .pending-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 2px 8px;
-    background: rgba(212, 160, 74, 0.15);
-    border: 1px solid var(--warning);
-    color: var(--warning);
-    border-radius: 10px;
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-left: 6px;
-  }
-  .pending-pill::before {
-    content: '';
-    width: 5px;
-    height: 5px;
-    background: var(--warning);
-    border-radius: 50%;
-    animation: pulseDot 1.5s ease-in-out infinite;
-  }
-
-  /* Database status block (inside settings modal) */
-  .db-status {
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 14px 16px;
-    margin-bottom: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
+  .offline-banner button { background: var(--danger); color: var(--bg-deep); border: none; padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: var(--body-font); }
+  .pending-pill { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; background: rgba(212,160,74,.15); border: 1px solid var(--warning); color: var(--warning); border-radius: 10px; font-size: 9px; text-transform: uppercase; letter-spacing: 1px; margin-left: 6px; }
+  .pending-pill::before { content: ''; width: 5px; height: 5px; background: var(--warning); border-radius: 50%; animation: pulseDot 1.5s ease-in-out infinite; }
+  .db-status { background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
   .db-status-info { display: flex; flex-direction: column; gap: 2px; }
-  .db-status-label {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-    color: var(--text-muted);
-  }
-  .db-status-value {
-    font-family: var(--mono-font);
-    font-size: 13px;
-    color: var(--text-primary);
-  }
+  .db-status-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-muted); }
+  .db-status-value { font-family: var(--mono-font); font-size: 13px; color: var(--text-primary); }
   .db-status-value.success { color: var(--success); }
   .db-status-value.error { color: var(--danger); }
   .db-status-value.empty { color: var(--warning); }
-  .db-status .stat-sub { font-size: 11px; color: var(--text-muted); font-family: var(--mono-font); }
 
-  /* Autocomplete dropdown */
+  /* Autocomplete */
   .autocomplete-wrap { position: relative; }
-  .autocomplete-list {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: var(--bg-elevated);
-    border: 1px solid var(--border-strong);
-    border-radius: 6px;
-    margin-top: 4px;
-    max-height: 240px;
-    overflow-y: auto;
-    z-index: 50;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-    display: none;
-  }
+  .autocomplete-list { position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-elevated); border: 1px solid var(--border-strong); border-radius: 6px; margin-top: 4px; max-height: 240px; overflow-y: auto; z-index: 50; box-shadow: 0 8px 24px rgba(0,0,0,0.4); display: none; }
   .autocomplete-list.active { display: block; }
-  .autocomplete-item {
-    padding: 10px 14px;
-    cursor: pointer;
-    border-bottom: 1px solid var(--border);
-    transition: background 0.15s;
-  }
+  .autocomplete-item { padding: 10px 14px; cursor: pointer; border-bottom: 1px solid var(--border); transition: background 0.15s; }
   .autocomplete-item:last-child { border-bottom: none; }
-  .autocomplete-item:hover, .autocomplete-item.highlighted {
-    background: var(--bg-input);
-  }
-  .autocomplete-name {
-    font-size: 13px;
-    color: var(--text-primary);
-    margin-bottom: 2px;
-  }
-  .autocomplete-meta {
-    font-size: 10px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-  .autocomplete-tier-pill {
-    display: inline-block;
-    padding: 1px 6px;
-    border-radius: 8px;
-    font-size: 9px;
-    font-weight: 600;
-    background: var(--accent);
-    color: var(--bg-deep);
-  }
-
-  /* Cigar Collective tier pill */
-  .cc-tier-pill {
-    display: inline-flex;
-    align-items: center;
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    font-family: var(--body-font);
-    background: var(--bg-input);
-    color: var(--text-secondary);
-    border: 1px solid var(--border-strong);
-    margin-left: 6px;
-  }
-  .cc-tier-pill .cc-prefix {
-    font-size: 9px;
-    color: var(--text-muted);
-    margin-right: 5px;
-    letter-spacing: 1px;
-  }
-
-  /* MATCH GLOW: when user rating tier == CC tier */
-  .rating-pill.aligned, .cc-tier-pill.aligned {
-    animation: alignedPulse 2.5s ease-in-out infinite;
-    border-color: var(--accent) !important;
-    background: rgba(201, 169, 110, 0.25) !important;
-    color: var(--accent) !important;
-    box-shadow: 0 0 12px rgba(201, 169, 110, 0.35);
-  }
-  @keyframes alignedPulse {
-    0%, 100% { box-shadow: 0 0 8px rgba(201, 169, 110, 0.3); }
-    50% { box-shadow: 0 0 18px rgba(201, 169, 110, 0.6); }
-  }
-  .alignment-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--accent);
-    margin-left: 8px;
-    font-weight: 600;
-  }
-  .alignment-badge::before {
-    content: '';
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 6px var(--accent);
-    animation: alignedPulse 2.5s ease-in-out infinite;
-  }
-
-  /* Disabled / readonly state for auto-filled fields */
-  .field.auto-filled input,
-  .field.auto-filled textarea {
-    background: rgba(201, 169, 110, 0.05);
-    border-color: var(--accent-dim);
-  }
-  .field-badge {
-    display: inline-block;
-    margin-left: 8px;
-    font-size: 9px;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 600;
-  }
+  .autocomplete-item:hover, .autocomplete-item.highlighted { background: var(--bg-input); }
+  .autocomplete-name { font-size: 13px; color: var(--text-primary); margin-bottom: 2px; }
+  .autocomplete-meta { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; display: flex; gap: 8px; align-items: center; }
+  .autocomplete-tier-pill { display: inline-block; padding: 1px 6px; border-radius: 8px; font-size: 9px; font-weight: 600; background: var(--accent); color: var(--bg-deep); }
+  .cc-tier-pill { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; font-family: var(--body-font); background: var(--bg-input); color: var(--text-secondary); border: 1px solid var(--border-strong); margin-left: 6px; }
+  .rating-pill.aligned, .cc-tier-pill.aligned { animation: alignedPulse 2.5s ease-in-out infinite; border-color: var(--accent) !important; background: rgba(201,169,110,.25) !important; color: var(--accent) !important; box-shadow: 0 0 12px rgba(201,169,110,.35); }
+  @keyframes alignedPulse { 0%, 100% { box-shadow: 0 0 8px rgba(201,169,110,.3); } 50% { box-shadow: 0 0 18px rgba(201,169,110,.6); } }
+  .alignment-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 9px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-left: 8px; font-weight: 600; }
+  .alignment-badge::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 6px var(--accent); animation: alignedPulse 2.5s ease-in-out infinite; }
+  .field.auto-filled input, .field.auto-filled textarea { background: rgba(201,169,110,.05); border-color: var(--accent-dim); }
+  .field-badge { display: inline-block; margin-left: 8px; font-size: 9px; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
 
   @media (max-width: 700px) {
     body { padding: 20px 14px 60px; }
@@ -905,20 +249,31 @@
     .header-title h1 { font-size: 28px; }
     .fx-display { text-align: left; }
     .budget-row { grid-template-columns: 1fr; }
+    .actual-costs-grid { grid-template-columns: 1fr; }
     .card-extras { grid-template-columns: 1fr; }
+    .watchlist-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 <div class="container">
 
-  <!-- Header -->
   <div class="header">
     <div class="header-title">
-      <h1>Ramo's <em>Humidor</em> Watchlist</h1>
-      <p>Track. Compare. Pull the trigger at the right time.</p>
+      <div id="home-title-block">
+        <h1>Ramo's <em>Humidor</em> Watchlist</h1>
+        <p>Track. Compare. Pull the trigger at the right time.</p>
+      </div>
+      <div id="detail-title-block" style="display:none">
+        <button class="back-btn" onclick="goHome()">&#8592; All Watchlists</button>
+        <div class="detail-watchlist-title">
+          <h2 id="detail-watchlist-name"></h2>
+          <button class="btn-icon" onclick="editCurrentWatchlist()" title="Edit watchlist">&#9998;</button>
+        </div>
+      </div>
     </div>
     <div class="header-tools">
+      <button class="btn btn-secondary" id="new-watchlist-btn" onclick="openNewWatchlistModal()" style="height:42px;display:none">+ New Watchlist</button>
       <div class="fx-display">
         <div class="fx-label">USD &rarr; ZAR</div>
         <div class="fx-rate" id="fx-rate">Loading...</div>
@@ -929,144 +284,166 @@
         <span class="dot"></span>
         <span class="label" id="sync-label">Connecting...</span>
       </div>
-      <button class="settings-btn" id="settings-btn" onclick="openSettingsModal()" title="Settings &amp; ratings database">&#9881;</button>
+      <button class="settings-btn" id="settings-btn" onclick="openSettingsModal()" title="Settings">&#9881;</button>
     </div>
   </div>
 
-  <!-- Offline banner -->
   <div class="offline-banner" id="offline-banner">
-    <div class="offline-banner-text">
-      <strong>Read-only mode:</strong> can't reach Supabase. Showing cached data. Changes will queue and sync when reconnected.
-    </div>
+    <div class="offline-banner-text"><strong>Read-only mode:</strong> can't reach Supabase. Showing cached data.</div>
     <button onclick="manualReconnect()">Retry now</button>
   </div>
 
-  <!-- Budget Panel -->
-  <div class="budget-panel">
-    <div class="budget-row">
-      <div class="budget-input-group">
-        <span class="budget-label">Budget</span>
-        <div class="budget-input-wrap">
-          <span class="budget-input-prefix">R</span>
-          <input type="number" id="budget-zar" placeholder="0.00" step="100" oninput="updateBudget()">
+  <!-- HOME VIEW -->
+  <div id="home-view" style="display:none">
+    <h2 class="section-title">Your Watchlists</h2>
+    <div class="watchlist-grid" id="watchlist-grid"></div>
+  </div>
+
+  <!-- DETAIL VIEW -->
+  <div id="detail-view" style="display:none">
+    <div class="budget-panel">
+      <div class="budget-row">
+        <div class="budget-input-group">
+          <span class="budget-label">Budget</span>
+          <div class="budget-input-wrap">
+            <span class="budget-input-prefix">R</span>
+            <input type="number" id="budget-zar" placeholder="0.00" step="100" oninput="onBudgetInput()">
+          </div>
+          <span class="stat-sub" id="budget-usd">= $0.00 USD</span>
         </div>
-        <span class="stat-sub" id="budget-usd">= $0.00 USD</span>
+        <div class="progress-section">
+          <div class="progress-stats">
+            <span>Landed cost <span class="spent" id="spent-display">R 0.00</span></span>
+            <span>Remaining <span class="remaining" id="remaining-display">R 0.00</span></span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+          <span class="stat-sub" id="progress-pct">0% of budget used</span>
+        </div>
       </div>
-      <div class="progress-section">
-        <div class="progress-stats">
-          <span>Landed cost <span class="spent" id="spent-display">R 0.00</span></span>
-          <span>Remaining <span class="remaining" id="remaining-display">R 0.00</span></span>
+      <div class="actual-costs">
+        <div class="actual-costs-header">
+          Actual Costs
+          <span class="actual-costs-hint">Fill in after ordering — leave blank to keep 30% shipping estimates</span>
         </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+        <div class="actual-costs-grid">
+          <div class="field">
+            <label>Actual shipping (USD) <span class="field-badge" id="shipping-override-badge" style="display:none">Overriding estimate</span></label>
+            <div class="budget-input-wrap">
+              <span class="budget-input-prefix">$</span>
+              <input type="number" id="f-shipping-usd" placeholder="blank = 30% US estimate" step="0.01" oninput="onActualCostsInput()">
+            </div>
+          </div>
+          <div class="field">
+            <label>Customs / duties (ZAR)</label>
+            <div class="budget-input-wrap">
+              <span class="budget-input-prefix">R</span>
+              <input type="number" id="f-customs-zar" placeholder="0.00" step="1" oninput="onActualCostsInput()">
+            </div>
+          </div>
+          <div class="field" style="grid-column:1/-1">
+            <label>Shipping / customs notes</label>
+            <input type="text" id="f-shipping-notes" placeholder="e.g. KAD Mesa AZ forwarder + DHL + SARS duty" oninput="onActualCostsInput()">
+          </div>
         </div>
-        <span class="stat-sub" id="progress-pct">0% of budget used</span>
       </div>
     </div>
-  </div>
 
-  <!-- Add Form Toggle -->
-  <h2 class="section-title">Watchlist</h2>
+    <h2 class="section-title">Watchlist</h2>
+    <div class="filters">
+      <div class="filter-group">
+        <label>Status</label>
+        <select id="filter-status" onchange="render()">
+          <option value="all">All</option><option value="watching">Watching</option>
+          <option value="ready">Ready to buy</option><option value="bought">Bought</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Retailer</label>
+        <select id="filter-retailer" onchange="render()">
+          <option value="all">All</option>
+          <option value="COH Cigars">COH Cigars</option>
+          <option value="Atlantic Cigar Company">Atlantic Cigar</option>
+          <option value="Luxury Cigar Club">Luxury Cigar Club</option>
+          <option value="I Heart Cigars">I Heart Cigars</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>My Rating</label>
+        <select id="filter-rating" onchange="render()">
+          <option value="all">All</option>
+          <option value="Legendary">Legendary</option><option value="Banger">Banger</option>
+          <option value="Solid">Solid</option><option value="Hmm... ok">Hmm... ok</option>
+          <option value="No thanks">No thanks</option><option value="Dafuk?!">Dafuk?!</option>
+          <option value="unrated">Unrated</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Sort</label>
+        <select id="filter-sort" onchange="render()">
+          <option value="added-desc">Recently added</option>
+          <option value="value">Best value (rating &times; discount)</option>
+          <option value="discount">Highest discount %</option>
+          <option value="price-asc">Landed cost: low to high</option>
+          <option value="price-desc">Landed cost: high to low</option>
+          <option value="per-stick">Lowest per-stick cost</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" style="margin-left:auto" onclick="openAddModal()">+ Add Cigar</button>
+    </div>
+    <div class="count-badge" id="count-badge"></div>
+    <div class="cards" id="cards"></div>
+    <div class="totals-bar" id="totals-bar" style="display:none">
+      <div class="total-cell">
+        <span class="label">Items</span>
+        <span class="value" id="total-items">0</span>
+        <span class="sub" id="total-sticks">0 sticks</span>
+      </div>
+      <div class="total-cell">
+        <span class="label">Subtotal (USD)</span>
+        <span class="value" id="total-usd">$0.00</span>
+        <span class="sub">excl. shipping &amp; tax</span>
+      </div>
+      <div class="total-cell">
+        <span class="label">Shipping (USD)</span>
+        <span class="value" id="total-shipping">$0.00</span>
+        <span class="sub" id="total-shipping-sub">30% est. for US</span>
+      </div>
+      <div class="total-cell">
+        <span class="label">Customs (ZAR)</span>
+        <span class="value" id="total-customs">&#8212;</span>
+        <span class="sub">duties &amp; levies</span>
+      </div>
+      <div class="total-cell">
+        <span class="label">Landed (USD)</span>
+        <span class="value accent" id="total-landed-usd">$0.00</span>
+        <span class="sub">all-in excl. customs</span>
+      </div>
+      <div class="total-cell">
+        <span class="label">Landed (ZAR)</span>
+        <span class="value accent" id="total-landed-zar">R 0.00</span>
+        <span class="sub" id="total-fx-note">at current FX</span>
+      </div>
+      <div class="total-cell">
+        <span class="label">Per cigar (ZAR)</span>
+        <span class="value accent" id="total-per-cigar">R 0.00</span>
+        <span class="sub">landed basket avg</span>
+      </div>
+    </div>
+  </div><!-- /detail-view -->
 
-  <!-- Filters -->
-  <div class="filters">
-    <div class="filter-group">
-      <label>Status</label>
-      <select id="filter-status" onchange="render()">
-        <option value="all">All</option>
-        <option value="watching">Watching</option>
-        <option value="ready">Ready to buy</option>
-        <option value="bought">Bought</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <label>Retailer</label>
-      <select id="filter-retailer" onchange="render()">
-        <option value="all">All</option>
-        <option value="COH Cigars">COH Cigars</option>
-        <option value="Atlantic Cigar Company">Atlantic Cigar</option>
-        <option value="Luxury Cigar Club">Luxury Cigar Club</option>
-        <option value="I Heart Cigars">I Heart Cigars</option>
-        <option value="Other">Other</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <label>My Rating</label>
-      <select id="filter-rating" onchange="render()">
-        <option value="all">All</option>
-        <option value="Legendary">Legendary</option>
-        <option value="Banger">Banger</option>
-        <option value="Solid">Solid</option>
-        <option value="Hmm... ok">Hmm... ok</option>
-        <option value="No thanks">No thanks</option>
-        <option value="Dafuk?!">Dafuk?!</option>
-        <option value="unrated">Unrated</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <label>Sort</label>
-      <select id="filter-sort" onchange="render()">
-        <option value="added-desc">Recently added</option>
-        <option value="value">Best value (rating &times; discount)</option>
-        <option value="discount">Highest discount %</option>
-        <option value="price-asc">Landed cost: low to high</option>
-        <option value="price-desc">Landed cost: high to low</option>
-        <option value="per-stick">Lowest per-stick cost</option>
-      </select>
-    </div>
-    <button class="btn btn-primary" style="margin-left:auto" onclick="openAddModal()">+ Add Cigar</button>
-  </div>
+</div><!-- /container -->
 
-  <div class="count-badge" id="count-badge"></div>
-
-  <!-- Cards -->
-  <div class="cards" id="cards"></div>
-
-  <!-- Totals -->
-  <div class="totals-bar" id="totals-bar" style="display:none">
-    <div class="total-cell">
-      <span class="label">Items</span>
-      <span class="value" id="total-items">0</span>
-      <span class="sub" id="total-sticks">0 sticks</span>
-    </div>
-    <div class="total-cell">
-      <span class="label">Subtotal (USD)</span>
-      <span class="value" id="total-usd">$0.00</span>
-      <span class="sub">excl. shipping &amp; tax</span>
-    </div>
-    <div class="total-cell">
-      <span class="label">Shipping uplift</span>
-      <span class="value" id="total-shipping">$0.00</span>
-      <span class="sub">30% for US retailers</span>
-    </div>
-    <div class="total-cell">
-      <span class="label">Landed (USD)</span>
-      <span class="value accent" id="total-landed-usd">$0.00</span>
-      <span class="sub">all-in</span>
-    </div>
-    <div class="total-cell">
-      <span class="label">Landed (ZAR)</span>
-      <span class="value accent" id="total-landed-zar">R 0.00</span>
-      <span class="sub" id="total-fx-note">at current FX</span>
-    </div>
-    <div class="total-cell">
-      <span class="label">Per cigar (ZAR)</span>
-      <span class="value accent" id="total-per-cigar">R 0.00</span>
-      <span class="sub">landed basket avg</span>
-    </div>
-  </div>
-
-</div>
-
-<!-- Add/Edit Modal -->
+<!-- Add/Edit Cigar Modal -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
     <h2 id="modal-title">Add Cigar</h2>
     <div class="form-grid">
-      <div class="field" style="grid-column: 1 / -1">
-        <label>Cigar (brand, blend, vitola) <span class="field-badge" id="match-badge" style="display:none">Matched from database</span></label>
+      <div class="field" style="grid-column:1/-1">
+        <label>Cigar <span class="field-badge" id="match-badge" style="display:none">Matched from database</span></label>
         <div class="autocomplete-wrap">
-          <input type="text" id="f-cigar" placeholder="e.g. Padron 1964 Anniversary Exclusivo" autocomplete="off" oninput="onCigarInput()" onfocus="onCigarInput()" onblur="setTimeout(hideAutocomplete, 200)" onkeydown="onCigarKeydown(event)">
+          <input type="text" id="f-cigar" placeholder="e.g. Padron 1964 Anniversary Exclusivo" autocomplete="off"
+            oninput="onCigarInput()" onfocus="onCigarInput()" onblur="setTimeout(hideAutocomplete,200)" onkeydown="onCigarKeydown(event)">
           <div class="autocomplete-list" id="autocomplete-list"></div>
         </div>
       </div>
@@ -1083,56 +460,37 @@
       <div class="field">
         <label>Type</label>
         <select id="f-type">
-          <option>Single</option>
-          <option>5-Pack</option>
-          <option>10-Pack</option>
-          <option>Sampler</option>
-          <option>Bundle</option>
-          <option>Box</option>
+          <option>Single</option><option>5-Pack</option><option>10-Pack</option>
+          <option>Sampler</option><option>Bundle</option><option>Box</option>
         </select>
       </div>
-      <div class="field">
-        <label>Sticks in pack</label>
-        <input type="number" id="f-sticks-per" placeholder="e.g. 25" min="1">
-      </div>
-      <div class="field">
-        <label>Quantity (packs)</label>
-        <input type="number" id="f-qty" value="1" min="1">
-      </div>
-      <div class="field">
-        <label>Price (USD, excl. tax)</label>
-        <input type="number" id="f-price" placeholder="0.00" step="0.01">
-      </div>
-      <div class="field">
-        <label>MSRP (USD)</label>
-        <input type="number" id="f-msrp" placeholder="optional" step="0.01">
-      </div>
+      <div class="field"><label>Sticks in pack</label><input type="number" id="f-sticks-per" placeholder="e.g. 25" min="1"></div>
+      <div class="field"><label>Quantity (packs)</label><input type="number" id="f-qty" value="1" min="1"></div>
+      <div class="field"><label>Price (USD, excl. tax)</label><input type="number" id="f-price" placeholder="0.00" step="0.01"></div>
+      <div class="field"><label>MSRP (USD)</label><input type="number" id="f-msrp" placeholder="optional" step="0.01"></div>
       <div class="field">
         <label>My rating</label>
         <select id="f-rating">
           <option value="">Not yet rated</option>
-          <option value="Legendary">Legendary (95-100)</option>
-          <option value="Banger">Banger (85-94)</option>
-          <option value="Solid">Solid (70-84)</option>
-          <option value="Hmm... ok">Hmm... ok (50-69)</option>
-          <option value="No thanks">No thanks (25-49)</option>
-          <option value="Dafuk?!">Dafuk?! (0-24)</option>
+          <option value="Legendary">Legendary (95-100)</option><option value="Banger">Banger (85-94)</option>
+          <option value="Solid">Solid (70-84)</option><option value="Hmm... ok">Hmm... ok (50-69)</option>
+          <option value="No thanks">No thanks (25-49)</option><option value="Dafuk?!">Dafuk?! (0-24)</option>
         </select>
       </div>
       <div class="field" id="field-cc-rating">
         <label>Cigar Collective rating <span class="field-badge" style="display:none">Auto</span></label>
-        <input type="text" id="f-cc-rating" placeholder="e.g. T2 or paste manually">
+        <input type="text" id="f-cc-rating" placeholder="e.g. T2">
       </div>
-      <div class="field" style="grid-column: 1 / -1" id="field-cc-link">
+      <div class="field" style="grid-column:1/-1" id="field-cc-link">
         <label>Cigar Collective link <span class="field-badge" style="display:none">Auto</span></label>
         <input type="url" id="f-cc-link" placeholder="https://...">
       </div>
-      <div class="field" style="grid-column: 1 / -1" id="field-overview">
-        <label>Overview (general sentiment / your notes from research) <span class="field-badge" style="display:none">Auto</span></label>
-        <textarea id="f-overview" placeholder="Paste in or summarise the general sentiment around this blend..."></textarea>
+      <div class="field" style="grid-column:1/-1" id="field-overview">
+        <label>Overview <span class="field-badge" style="display:none">Auto</span></label>
+        <textarea id="f-overview" placeholder="General sentiment / research notes..."></textarea>
       </div>
-      <div class="field" style="grid-column: 1 / -1">
-        <label>Personal notes (e.g. wait for Black Friday)</label>
+      <div class="field" style="grid-column:1/-1">
+        <label>Personal notes</label>
         <textarea id="f-notes" placeholder="Optional"></textarea>
       </div>
     </div>
@@ -1143,44 +501,58 @@
   </div>
 </div>
 
+<!-- Watchlist Modal -->
+<div class="modal-overlay" id="watchlist-modal">
+  <div class="modal">
+    <h2 id="wl-modal-title">New Watchlist</h2>
+    <div class="form-grid">
+      <div class="field" style="grid-column:1/-1">
+        <label>Name</label>
+        <input type="text" id="wl-name" placeholder="e.g. COH June 2026 Order">
+      </div>
+      <div class="field">
+        <label>Status</label>
+        <select id="wl-status">
+          <option value="planning">Planning</option>
+          <option value="ordered">Ordered</option>
+          <option value="delivered">Delivered</option>
+        </select>
+      </div>
+      <div class="field" style="grid-column:1/-1">
+        <label>Notes (optional)</label>
+        <textarea id="wl-notes" placeholder="e.g. Black Friday haul" style="min-height:48px"></textarea>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-danger" id="wl-delete-btn" onclick="deleteWatchlistFromModal()" style="margin-right:auto;display:none">Delete watchlist</button>
+      <button class="btn btn-secondary" onclick="closeWatchlistModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveWatchlist()" id="wl-save-btn">Create</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <!-- Settings Modal -->
 <div class="modal-overlay" id="settings-modal">
   <div class="modal">
     <h2>Settings</h2>
-
-    <h3 style="font-family: var(--display-font); font-size: 16px; color: var(--text-secondary); margin-bottom: 12px;">Cigar Collective Ratings Database</h3>
-
+    <h3 style="font-family:var(--display-font);font-size:16px;color:var(--text-secondary);margin-bottom:12px">Cigar Collective Ratings Database</h3>
     <div class="db-status">
-      <div class="db-status-info">
-        <span class="db-status-label">Status</span>
-        <span class="db-status-value" id="db-status-text">Not configured</span>
-      </div>
-      <div class="db-status-info">
-        <span class="db-status-label">Ratings loaded</span>
-        <span class="db-status-value" id="db-status-count">0</span>
-      </div>
-      <div class="db-status-info">
-        <span class="db-status-label">Last fetched</span>
-        <span class="stat-sub" id="db-status-time">Never</span>
-      </div>
+      <div class="db-status-info"><span class="db-status-label">Status</span><span class="db-status-value" id="db-status-text">Not configured</span></div>
+      <div class="db-status-info"><span class="db-status-label">Ratings loaded</span><span class="db-status-value" id="db-status-count">0</span></div>
+      <div class="db-status-info"><span class="db-status-label">Last fetched</span><span class="stat-sub" id="db-status-time">Never</span></div>
     </div>
-
     <div class="form-grid full">
       <div class="field">
         <label>Database JSON URL</label>
         <input type="url" id="f-db-url" placeholder="https://ramophalatse.github.io/cigars/ratings.json" value="https://ramophalatse.github.io/cigars/ratings.json">
       </div>
     </div>
-
-    <p style="font-size: 12px; color: var(--text-muted); margin-top: 12px; line-height: 1.5;">
-      The widget will fetch this JSON file on load and use it to auto-complete cigar entries with Cigar Collective's tier ratings.
-      Paste in the GitHub Pages URL once your ratings database is hosted.
-      <br><br>
-      <strong style="color: var(--text-secondary);">Tier mapping:</strong> T1 &harr; Legendary, T2 &harr; Banger, T3 &harr; Solid, T4 &harr; Hmm... ok, T5 &harr; No thanks, T6 &harr; Dafuk?!
+    <p style="font-size:12px;color:var(--text-muted);margin-top:12px;line-height:1.5">
+      Fetched on load to auto-complete entries with CC tier ratings.<br><br>
+      <strong style="color:var(--text-secondary)">Tier mapping:</strong> T1&harr;Legendary, T2&harr;Banger, T3&harr;Solid, T4&harr;Hmm...ok, T5&harr;No thanks, T6&harr;Dafuk?!
     </p>
-
     <div class="form-actions">
       <button class="btn btn-secondary" onclick="closeSettingsModal()">Cancel</button>
       <button class="btn btn-secondary" onclick="reloadDatabase()">Reload database</button>
@@ -1190,1157 +562,888 @@
 </div>
 
 <script>
-  // ============ STATE ============
-  // Supabase
-  const SUPABASE_URL = 'https://tiaplwggxuoonalvqdcg.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_VllgEZt_lkaovHkp2phf3g_PE3lOMs5';
-  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// ============ CONSTANTS & STATE ============
+const SUPABASE_URL = 'https://tiaplwggxuoonalvqdcg.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_VllgEZt_lkaovHkp2phf3g_PE3lOMs5';
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const DEFAULT_DB_URL = 'https://ramophalatse.github.io/cigars/ratings.json';
+const SHIPPING_UPLIFT = 0.30;
+const US_RETAILERS = ['Atlantic Cigar Company', 'Luxury Cigar Club', 'I Heart Cigars'];
+const DEFAULT_STICKS = { 'Single':1,'5-Pack':5,'10-Pack':10,'Sampler':5,'Bundle':20,'Box':20 };
 
-  // Connection state
-  let isOnline = false;
-  let syncState = 'connecting'; // connecting | synced | saving | offline | pending
-  let pendingWrites = []; // queued operations when offline: { op, table, data, id, timestamp }
-  let pendingRowIds = new Set(); // local IDs that haven't synced yet
-  let reconnectInterval = null;
+const TIER_TO_USER = { T1:'Legendary',T2:'Banger',T3:'Solid',T4:'Hmm... ok',T5:'No thanks',T6:'Dafuk?!' };
+const TIER_DISPLAY  = { T1:'S Tier',T2:'A Tier',T3:'B Tier',T4:'C Tier',T5:'D Tier',T6:'F Tier' };
+const USER_TO_TIER  = { 'Legendary':'T1','Banger':'T2','Solid':'T3','Hmm... ok':'T4','No thanks':'T5','Dafuk?!':'T6' };
 
-  let cigars = [];
-  let budget = 0;
-  let fxRate = 0.0606; // ZAR per USD fallback (1 ZAR = 0.0606 USD)
-  let editingId = null;
-  const SHIPPING_UPLIFT = 0.30; // 30% for US retailers
-  const US_RETAILERS = ['Atlantic Cigar Company', 'Luxury Cigar Club', 'I Heart Cigars'];
+// App state
+let watchlists = [];
+let cigars = [];
+let activeWatchlist = null;   // currently-open watchlist object
+let currentView = 'home';     // 'home' | 'detail'
+let isOnline = false;
+let syncState = 'connecting';
+let pendingWrites = [];
+let pendingRowIds = new Set();
+let reconnectInterval = null;
+let fxRate = 0.0606;
+let dbUrl = DEFAULT_DB_URL;
+let ratingsDB = { ratings:[], tier_scale:{}, lastFetched:null };
+let fuseIndex = null;
+let autocompleteHighlight = -1;
+let currentMatchedRating = null;
+let editingId = null;
+let editingWatchlistId = null;
 
-  // Ratings database
-  let ratingsDB = { ratings: [], tier_scale: {}, lastFetched: null };
-  let dbUrl = 'https://ramophalatse.github.io/cigars/ratings.json';
-  let autocompleteHighlight = -1;
-  let currentMatchedRating = null; // populated when a DB match auto-fills the form
-
-  // Tier mapping: Cigar Collective tier → user rating
-  const TIER_TO_USER = {
-    'T1': 'Legendary',
-    'T2': 'Banger',
-    'T3': 'Solid',
-    'T4': 'Hmm... ok',
-    'T5': 'No thanks',
-    'T6': 'Dafuk?!'
+// ============ DB SHAPE CONVERTERS ============
+function dbToAppWatchlist(row) {
+  return {
+    id: row.id,
+    name: row.name || 'Unnamed Watchlist',
+    status: row.status || 'planning',
+    notes: row.notes || '',
+    budget: parseFloat(row.budget_zar) || 0,
+    shippingUSD: row.shipping_cost_usd != null ? parseFloat(row.shipping_cost_usd) : null,
+    customsZAR:  row.customs_cost_zar  != null ? parseFloat(row.customs_cost_zar)  : null,
+    shippingNotes: row.shipping_notes || '',
+    created: row.created_at ? new Date(row.created_at).getTime() : Date.now()
   };
-
-  // Display labels for CC tier pills on cards
-  const TIER_DISPLAY = {
-    'T1': 'S Tier',
-    'T2': 'A Tier',
-    'T3': 'B Tier',
-    'T4': 'C Tier',
-    'T5': 'D Tier',
-    'T6': 'F Tier'
+}
+function appToDbWatchlist(w, includeId=false) {
+  const row = {
+    name: w.name, status: w.status || 'planning', notes: w.notes || null,
+    budget_zar: w.budget || 0,
+    shipping_cost_usd: w.shippingUSD != null ? w.shippingUSD : null,
+    customs_cost_zar:  w.customsZAR  != null ? w.customsZAR  : null,
+    shipping_notes: w.shippingNotes || null,
+    updated_at: new Date().toISOString()
   };
-  const USER_TO_TIER = {
-    'Legendary': 'T1',
-    'Banger': 'T2',
-    'Solid': 'T3',
-    'Hmm... ok': 'T4',
-    'No thanks': 'T5',
-    'Dafuk?!': 'T6'
+  if (includeId && w.id) row.id = w.id;
+  return row;
+}
+function dbToApp(row) {
+  return {
+    id: row.id, watchlistId: row.watchlist_id,
+    cigar: row.cigar, retailer: row.retailer, type: row.type,
+    sticksPer: row.sticks_per, qty: row.qty,
+    price: row.price != null ? String(row.price) : '',
+    msrp:  row.msrp  != null ? String(row.msrp)  : '',
+    rating: row.rating, ccRating: row.cc_rating, ccLink: row.cc_link,
+    overview: row.overview, notes: row.notes,
+    status: row.status || 'watching',
+    active: row.active !== false,
+    added: row.added_at ? new Date(row.added_at).getTime() : Date.now()
   };
-
-  // Default sticks per pack guesses
-  const DEFAULT_STICKS = {
-    'Single': 1, '5-Pack': 5, '10-Pack': 10,
-    'Sampler': 5, 'Bundle': 20, 'Box': 20
+}
+function appToDb(c, includeId=false) {
+  const row = {
+    cigar: c.cigar, retailer: c.retailer, type: c.type,
+    sticks_per: c.sticksPer ? parseInt(c.sticksPer) : null,
+    qty: parseInt(c.qty) || 1,
+    price: c.price ? parseFloat(c.price) : null,
+    msrp:  c.msrp  ? parseFloat(c.msrp)  : null,
+    rating: c.rating || null, cc_rating: c.ccRating || null,
+    cc_link: c.ccLink || null, overview: c.overview || null,
+    notes: c.notes || null, status: c.status || 'watching',
+    active: c.active !== false, watchlist_id: c.watchlistId || null,
+    updated_at: new Date().toISOString()
   };
+  if (includeId && c.id) row.id = c.id;
+  return row;
+}
 
-  // ============ SUPABASE LAYER ============
-
-  // Convert DB row (snake_case) → app shape (camelCase)
-  function dbToApp(row) {
-    return {
-      id: row.id,
-      cigar: row.cigar,
-      retailer: row.retailer,
-      type: row.type,
-      sticksPer: row.sticks_per,
-      qty: row.qty,
-      price: row.price !== null ? String(row.price) : '',
-      msrp: row.msrp !== null ? String(row.msrp) : '',
-      rating: row.rating,
-      ccRating: row.cc_rating,
-      ccLink: row.cc_link,
-      overview: row.overview,
-      notes: row.notes,
-      status: row.status || 'watching',
-      active: row.active !== false, // default true; explicit false = excluded
-      added: row.added_at ? new Date(row.added_at).getTime() : Date.now()
-    };
-  }
-
-  // Convert app shape (camelCase) → DB row (snake_case), excluding ID for inserts
-  function appToDb(c, includeId = false) {
-    const row = {
-      cigar: c.cigar,
-      retailer: c.retailer,
-      type: c.type,
-      sticks_per: c.sticksPer ? parseInt(c.sticksPer) : null,
-      qty: parseInt(c.qty) || 1,
-      price: c.price ? parseFloat(c.price) : null,
-      msrp: c.msrp ? parseFloat(c.msrp) : null,
-      rating: c.rating || null,
-      cc_rating: c.ccRating || null,
-      cc_link: c.ccLink || null,
-      overview: c.overview || null,
-      notes: c.notes || null,
-      status: c.status || 'watching',
-      active: c.active !== false,
-      updated_at: new Date().toISOString()
-    };
-    if (includeId && c.id) row.id = c.id;
-    return row;
-  }
-
-  // Initial load: try Supabase, fall back to cached
-  async function loadState() {
-    setSyncState('connecting');
-    try {
-      // Try to fetch cigars and settings in parallel
-      const [cigarsRes, settingsRes] = await Promise.all([
-        db.from('cigars').select('*').order('added_at', { ascending: false }),
-        db.from('user_settings').select('*').eq('id', 1).single()
-      ]);
-
-      if (cigarsRes.error) throw cigarsRes.error;
-      // settings error is OK if row doesn't exist yet; we'll create defaults
-      cigars = (cigarsRes.data || []).map(dbToApp);
-
-      if (settingsRes.data) {
-        budget = parseFloat(settingsRes.data.budget_zar) || 0;
-        document.getElementById('budget-zar').value = budget || '';
-        // Use saved URL, or fall back to default if never saved
-        dbUrl = settingsRes.data.ratings_db_url || 'https://ramophalatse.github.io/cigars/ratings.json';
-        // If the default wasn't saved yet, persist it now
-        if (!settingsRes.data.ratings_db_url) {
-          dbUpdateSettings({ ratings_db_url: dbUrl });
-        }
-      }
-
-      isOnline = true;
-      setSyncState('synced');
-      // Cache for offline fallback
-      await cacheLocally();
-      // Also load pending writes from local cache (in case page was closed offline)
-      await loadPendingWrites();
-      if (pendingWrites.length > 0) {
-        await flushPendingWrites();
-      }
-    } catch (err) {
-      console.error('Supabase load failed:', err);
-      isOnline = false;
-      setSyncState('offline');
-      showOfflineBanner(true);
-      // Load from local cache
-      await loadFromCache();
-      // Start auto-reconnect
-      startReconnectLoop();
+// ============ SUPABASE LOAD ============
+async function loadState() {
+  setSyncState('connecting');
+  try {
+    const [wlRes, cigarsRes, settingsRes] = await Promise.all([
+      db.from('watchlists').select('*').order('created_at', { ascending: false }),
+      db.from('cigars').select('*').order('added_at', { ascending: false }),
+      db.from('user_settings').select('*').eq('id', 1).single()
+    ]);
+    if (wlRes.error) throw wlRes.error;
+    if (cigarsRes.error) throw cigarsRes.error;
+    watchlists = (wlRes.data || []).map(dbToAppWatchlist);
+    cigars     = (cigarsRes.data || []).map(dbToApp);
+    if (settingsRes.data) {
+      dbUrl = settingsRes.data.ratings_db_url || DEFAULT_DB_URL;
+      if (!settingsRes.data.ratings_db_url) dbUpdateSettings({ ratings_db_url: dbUrl });
     }
-    // Always load ratings DB cache (separate from Supabase)
-    await loadRatingsDBCache();
-  }
-
-  async function loadFromCache() {
-    try {
-      const res = await window.storage.get('watchlist-cache-cigars');
-      if (res && res.value) cigars = JSON.parse(res.value);
-    } catch(e) {}
-    try {
-      const res = await window.storage.get('watchlist-cache-budget');
-      if (res && res.value) {
-        budget = parseFloat(res.value);
-        document.getElementById('budget-zar').value = budget || '';
-      }
-    } catch(e) {}
-    try {
-      const res = await window.storage.get('watchlist-db-url');
-      dbUrl = (res && res.value) ? res.value : 'https://ramophalatse.github.io/cigars/ratings.json';
-    } catch(e) {
-      dbUrl = 'https://ramophalatse.github.io/cigars/ratings.json';
-    }
+    isOnline = true;
+    setSyncState('synced');
+    await cacheLocally();
     await loadPendingWrites();
-  }
-
-  async function loadRatingsDBCache() {
-    try {
-      const res = await window.storage.get('watchlist-db-cache');
-      if (res && res.value) {
-        ratingsDB = JSON.parse(res.value);
-        buildFuseIndex();
-      }
-    } catch(e) {}
-  }
-
-  async function loadPendingWrites() {
-    try {
-      const res = await window.storage.get('watchlist-pending-writes');
-      if (res && res.value) {
-        pendingWrites = JSON.parse(res.value);
-        pendingRowIds = new Set(pendingWrites.filter(w => w.table === 'cigars' && w.data && w.data.id).map(w => w.data.id));
-        if (pendingWrites.length > 0 && isOnline) {
-          setSyncState('pending');
-        }
-      }
-    } catch(e) {}
-  }
-
-  async function cacheLocally() {
-    try { await window.storage.set('watchlist-cache-cigars', JSON.stringify(cigars)); } catch(e) {}
-    try { await window.storage.set('watchlist-cache-budget', String(budget)); } catch(e) {}
-  }
-
-  async function persistPendingWrites() {
-    try { await window.storage.set('watchlist-pending-writes', JSON.stringify(pendingWrites)); } catch(e) {}
-  }
-
-  // ============ WRITE OPERATIONS ============
-  // Each write: optimistic UI update, attempt Supabase, queue on failure
-
-  async function dbInsertCigar(c) {
-    const row = appToDb(c, true); // include ID so optimistic UI matches DB
-    if (!isOnline) {
-      pendingWrites.push({ op: 'insert', table: 'cigars', data: { ...row }, ts: Date.now() });
-      pendingRowIds.add(c.id);
-      await persistPendingWrites();
-      setSyncState('pending');
-      return;
-    }
-    setSyncState('saving');
-    const { error } = await db.from('cigars').insert(row);
-    if (error) {
-      await handleWriteFailure({ op: 'insert', table: 'cigars', data: row });
-      pendingRowIds.add(c.id);
-    } else {
-      await cacheLocally();
-      setSyncState(pendingWrites.length > 0 ? 'pending' : 'synced');
-    }
-  }
-
-  async function dbUpdateCigar(c) {
-    const row = appToDb(c, false);
-    if (!isOnline) {
-      pendingWrites.push({ op: 'update', table: 'cigars', id: c.id, data: row, ts: Date.now() });
-      pendingRowIds.add(c.id);
-      await persistPendingWrites();
-      setSyncState('pending');
-      return;
-    }
-    setSyncState('saving');
-    const { error } = await db.from('cigars').update(row).eq('id', c.id);
-    if (error) {
-      await handleWriteFailure({ op: 'update', table: 'cigars', id: c.id, data: row });
-      pendingRowIds.add(c.id);
-    } else {
-      await cacheLocally();
-      setSyncState(pendingWrites.length > 0 ? 'pending' : 'synced');
-    }
-  }
-
-  async function dbDeleteCigar(id) {
-    if (!isOnline) {
-      pendingWrites.push({ op: 'delete', table: 'cigars', id, ts: Date.now() });
-      await persistPendingWrites();
-      setSyncState('pending');
-      return;
-    }
-    setSyncState('saving');
-    const { error } = await db.from('cigars').delete().eq('id', id);
-    if (error) {
-      await handleWriteFailure({ op: 'delete', table: 'cigars', id });
-    } else {
-      pendingRowIds.delete(id);
-      await cacheLocally();
-      setSyncState(pendingWrites.length > 0 ? 'pending' : 'synced');
-    }
-  }
-
-  async function dbUpdateSettings(patch) {
-    if (!isOnline) {
-      pendingWrites.push({ op: 'update', table: 'user_settings', id: 1, data: patch, ts: Date.now() });
-      await persistPendingWrites();
-      setSyncState('pending');
-      return;
-    }
-    setSyncState('saving');
-    const { error } = await db.from('user_settings').update({ ...patch, updated_at: new Date().toISOString() }).eq('id', 1);
-    if (error) {
-      await handleWriteFailure({ op: 'update', table: 'user_settings', id: 1, data: patch });
-    } else {
-      await cacheLocally();
-      setSyncState(pendingWrites.length > 0 ? 'pending' : 'synced');
-    }
-  }
-
-  async function handleWriteFailure(write) {
-    console.error('Write failed, queuing:', write);
-    isOnline = false;
-    pendingWrites.push({ ...write, ts: Date.now() });
-    await persistPendingWrites();
-    setSyncState('offline');
+    if (pendingWrites.length > 0) await flushPendingWrites();
+  } catch(err) {
+    console.error('Supabase load failed:', err);
+    isOnline = false; setSyncState('offline');
     showOfflineBanner(true);
+    await loadFromCache();
     startReconnectLoop();
   }
-
-  async function flushPendingWrites() {
-    if (pendingWrites.length === 0) return;
-    setSyncState('saving');
-    const toFlush = [...pendingWrites];
-    pendingWrites = [];
-    await persistPendingWrites();
-
-    for (const w of toFlush) {
-      try {
-        if (w.op === 'insert') {
-          const { error } = await db.from(w.table).insert(w.data);
-          if (error) throw error;
-          if (w.data && w.data.id) pendingRowIds.delete(w.data.id);
-        } else if (w.op === 'update') {
-          const { error } = await db.from(w.table).update(w.data).eq('id', w.id);
-          if (error) throw error;
-          pendingRowIds.delete(w.id);
-        } else if (w.op === 'delete') {
-          const { error } = await db.from(w.table).delete().eq('id', w.id);
-          if (error) throw error;
-        }
-      } catch (err) {
-        // Re-queue and bail
-        console.error('Flush failed:', err);
-        pendingWrites.push(w, ...toFlush.slice(toFlush.indexOf(w) + 1));
-        await persistPendingWrites();
-        setSyncState('offline');
-        return;
-      }
+  await loadRatingsDBCache();
+}
+async function loadFromCache() {
+  try { const r = await window.storage.get('watchlist-cache-watchlists'); if (r&&r.value) watchlists = JSON.parse(r.value); } catch(e){}
+  try { const r = await window.storage.get('watchlist-cache-cigars');     if (r&&r.value) cigars     = JSON.parse(r.value); } catch(e){}
+  try { const r = await window.storage.get('watchlist-db-url');           dbUrl = (r&&r.value) ? r.value : DEFAULT_DB_URL; } catch(e){}
+  await loadPendingWrites();
+}
+async function loadRatingsDBCache() {
+  try { const r = await window.storage.get('watchlist-db-cache'); if (r&&r.value) { ratingsDB = JSON.parse(r.value); buildFuseIndex(); } } catch(e){}
+}
+async function loadPendingWrites() {
+  try {
+    const r = await window.storage.get('watchlist-pending-writes');
+    if (r&&r.value) {
+      pendingWrites = JSON.parse(r.value);
+      pendingRowIds = new Set(pendingWrites.filter(w=>w.table==='cigars'&&w.data&&w.data.id).map(w=>w.data.id));
+      if (pendingWrites.length > 0 && isOnline) setSyncState('pending');
     }
-    setSyncState('synced');
-    showToast('Synced ' + toFlush.length + ' pending change' + (toFlush.length !== 1 ? 's' : ''));
-    render();
-  }
+  } catch(e){}
+}
+async function cacheLocally() {
+  try { await window.storage.set('watchlist-cache-watchlists', JSON.stringify(watchlists)); } catch(e){}
+  try { await window.storage.set('watchlist-cache-cigars',     JSON.stringify(cigars));     } catch(e){}
+}
+async function persistPendingWrites() {
+  try { await window.storage.set('watchlist-pending-writes', JSON.stringify(pendingWrites)); } catch(e){}
+}
 
-  // ============ CONNECTION MANAGEMENT ============
-  function setSyncState(state) {
-    syncState = state;
-    const el = document.getElementById('sync-status');
-    const label = document.getElementById('sync-label');
-    if (!el || !label) return;
-    el.classList.remove('connecting', 'synced', 'saving', 'offline', 'pending');
-    label.classList.remove('synced', 'saving', 'offline', 'pending');
-    el.classList.add(state);
-    label.classList.add(state);
-    const labels = {
-      connecting: 'Connecting...',
-      synced: 'Synced',
-      saving: 'Saving...',
-      offline: 'Offline',
-      pending: `Pending (${pendingWrites.length})`
-    };
-    label.textContent = labels[state] || state;
-  }
+// ============ WRITE OPS — WATCHLISTS ============
+async function dbInsertWatchlist(w) {
+  const row = appToDbWatchlist(w, true);
+  if (!isOnline) { pendingWrites.push({op:'insert',table:'watchlists',data:row,ts:Date.now()}); await persistPendingWrites(); setSyncState('pending'); return; }
+  setSyncState('saving');
+  const {error} = await db.from('watchlists').insert(row);
+  if (error) await handleWriteFailure({op:'insert',table:'watchlists',data:row});
+  else { await cacheLocally(); setSyncState(pendingWrites.length>0?'pending':'synced'); }
+}
+async function dbUpdateWatchlist(w) {
+  const row = appToDbWatchlist(w, false);
+  if (!isOnline) { pendingWrites.push({op:'update',table:'watchlists',id:w.id,data:row,ts:Date.now()}); await persistPendingWrites(); setSyncState('pending'); return; }
+  setSyncState('saving');
+  const {error} = await db.from('watchlists').update(row).eq('id', w.id);
+  if (error) await handleWriteFailure({op:'update',table:'watchlists',id:w.id,data:row});
+  else { await cacheLocally(); setSyncState(pendingWrites.length>0?'pending':'synced'); }
+}
+async function dbDeleteWatchlist(id) {
+  if (!isOnline) { showToast('Cannot delete while offline'); return false; }
+  setSyncState('saving');
+  const {error:cErr} = await db.from('cigars').delete().eq('watchlist_id', id);
+  if (cErr) { showToast('Delete failed'); setSyncState('synced'); return false; }
+  const {error:wErr} = await db.from('watchlists').delete().eq('id', id);
+  if (wErr) { showToast('Delete failed'); setSyncState('synced'); return false; }
+  await cacheLocally();
+  setSyncState(pendingWrites.length>0?'pending':'synced');
+  return true;
+}
 
-  function showOfflineBanner(show) {
-    document.getElementById('offline-banner').classList.toggle('active', show);
-  }
-
-  async function checkConnection() {
+// ============ WRITE OPS — CIGARS ============
+async function dbInsertCigar(c) {
+  const row = appToDb(c, true);
+  if (!isOnline) { pendingWrites.push({op:'insert',table:'cigars',data:{...row},ts:Date.now()}); pendingRowIds.add(c.id); await persistPendingWrites(); setSyncState('pending'); return; }
+  setSyncState('saving');
+  const {error} = await db.from('cigars').insert(row);
+  if (error) { await handleWriteFailure({op:'insert',table:'cigars',data:row}); pendingRowIds.add(c.id); }
+  else { await cacheLocally(); setSyncState(pendingWrites.length>0?'pending':'synced'); }
+}
+async function dbUpdateCigar(c) {
+  const row = appToDb(c, false);
+  if (!isOnline) { pendingWrites.push({op:'update',table:'cigars',id:c.id,data:row,ts:Date.now()}); pendingRowIds.add(c.id); await persistPendingWrites(); setSyncState('pending'); return; }
+  setSyncState('saving');
+  const {error} = await db.from('cigars').update(row).eq('id', c.id);
+  if (error) { await handleWriteFailure({op:'update',table:'cigars',id:c.id,data:row}); pendingRowIds.add(c.id); }
+  else { await cacheLocally(); setSyncState(pendingWrites.length>0?'pending':'synced'); }
+}
+async function dbDeleteCigar(id) {
+  if (!isOnline) { pendingWrites.push({op:'delete',table:'cigars',id,ts:Date.now()}); await persistPendingWrites(); setSyncState('pending'); return; }
+  setSyncState('saving');
+  const {error} = await db.from('cigars').delete().eq('id', id);
+  if (error) await handleWriteFailure({op:'delete',table:'cigars',id});
+  else { pendingRowIds.delete(id); await cacheLocally(); setSyncState(pendingWrites.length>0?'pending':'synced'); }
+}
+async function dbUpdateSettings(patch) {
+  if (!isOnline) { pendingWrites.push({op:'update',table:'user_settings',id:1,data:patch,ts:Date.now()}); await persistPendingWrites(); setSyncState('pending'); return; }
+  setSyncState('saving');
+  const {error} = await db.from('user_settings').update({...patch,updated_at:new Date().toISOString()}).eq('id',1);
+  if (error) await handleWriteFailure({op:'update',table:'user_settings',id:1,data:patch});
+  else { setSyncState(pendingWrites.length>0?'pending':'synced'); }
+}
+async function handleWriteFailure(write) {
+  console.error('Write failed, queuing:', write);
+  isOnline = false;
+  pendingWrites.push({...write,ts:Date.now()});
+  await persistPendingWrites();
+  setSyncState('offline'); showOfflineBanner(true); startReconnectLoop();
+}
+async function flushPendingWrites() {
+  if (!pendingWrites.length) return;
+  setSyncState('saving');
+  const toFlush = [...pendingWrites];
+  pendingWrites = []; await persistPendingWrites();
+  for (const w of toFlush) {
     try {
-      const { error } = await db.from('user_settings').select('id').eq('id', 1).single();
-      if (!error) {
-        isOnline = true;
-        showOfflineBanner(false);
-        stopReconnectLoop();
-        // Refetch fresh state from server
-        const { data: cigarsData, error: cErr } = await db.from('cigars').select('*').order('added_at', { ascending: false });
-        if (!cErr) {
-          cigars = (cigarsData || []).map(dbToApp);
-          await cacheLocally();
-        }
-        // Flush queued writes
-        if (pendingWrites.length > 0) {
-          await flushPendingWrites();
-        } else {
-          setSyncState('synced');
-        }
-        render();
-        return true;
-      }
-    } catch (e) {
-      isOnline = false;
-    }
-    return false;
-  }
-
-  function startReconnectLoop() {
-    if (reconnectInterval) return;
-    reconnectInterval = setInterval(async () => {
-      const ok = await checkConnection();
-      if (ok) stopReconnectLoop();
-    }, 30000); // 30 seconds
-  }
-
-  function stopReconnectLoop() {
-    if (reconnectInterval) {
-      clearInterval(reconnectInterval);
-      reconnectInterval = null;
+      if      (w.op==='insert') { const {error}=await db.from(w.table).insert(w.data); if(error)throw error; if(w.data&&w.data.id)pendingRowIds.delete(w.data.id); }
+      else if (w.op==='update') { const {error}=await db.from(w.table).update(w.data).eq('id',w.id); if(error)throw error; pendingRowIds.delete(w.id); }
+      else if (w.op==='delete') { const {error}=await db.from(w.table).delete().eq('id',w.id); if(error)throw error; }
+    } catch(err) {
+      console.error('Flush failed:', err);
+      pendingWrites.push(w, ...toFlush.slice(toFlush.indexOf(w)+1));
+      await persistPendingWrites(); setSyncState('offline'); return;
     }
   }
+  setSyncState('synced');
+  showToast('Synced '+toFlush.length+' pending change'+(toFlush.length!==1?'s':''));
+  if (currentView==='home') renderHome(); else render();
+}
 
-  async function manualReconnect() {
-    if (isOnline && pendingWrites.length === 0) {
-      showToast('Already connected');
-      return;
-    }
-    showToast('Reconnecting...');
-    const ok = await checkConnection();
-    if (!ok) showToast('Still offline. Will keep retrying in background.');
-  }
-
-  // ============ FX ============
-  async function loadFXRate() {
-    const rateEl = document.getElementById('fx-rate');
-    const timeEl = document.getElementById('fx-time');
-    rateEl.textContent = 'Loading...';
-    try {
-      const res = await fetch('https://open.er-api.com/v6/latest/ZAR');
-      const data = await res.json();
-      if (data && data.rates && data.rates.USD) {
-        fxRate = data.rates.USD;
-        const ts = new Date(data.time_last_update_utc || Date.now());
-        rateEl.textContent = '1 USD = R ' + (1/fxRate).toFixed(2);
-        timeEl.textContent = 'Updated ' + ts.toLocaleString('en-GB', { timeZone: 'Africa/Johannesburg', hour12: false });
-        document.getElementById('total-fx-note').textContent = '@ 1 USD = R ' + (1/fxRate).toFixed(3);
-        try { await window.storage.set('watchlist-fx', JSON.stringify({rate: fxRate, time: ts.toISOString()})); } catch(e) {}
-      } else {
-        throw new Error('Invalid response');
-      }
-    } catch(e) {
-      // Try cached
-      try {
-        const cached = await window.storage.get('watchlist-fx');
-        if (cached && cached.value) {
-          const c = JSON.parse(cached.value);
-          fxRate = c.rate;
-          rateEl.textContent = '1 USD = R ' + (1/fxRate).toFixed(2);
-          timeEl.textContent = 'Cached: ' + new Date(c.time).toLocaleString('en-GB');
-        } else {
-          rateEl.textContent = '1 USD = R ' + (1/fxRate).toFixed(2);
-          timeEl.textContent = 'Fallback rate (offline)';
-        }
-      } catch(err) {
-        rateEl.textContent = '1 USD = R ' + (1/fxRate).toFixed(2);
-        timeEl.textContent = 'Fallback rate (offline)';
-      }
-    }
-    updateBudget();
-    render();
-  }
-
-  // ============ CALCULATIONS ============
-  function isUSRetailer(retailer) {
-    return US_RETAILERS.includes(retailer);
-  }
-
-  function calcSubtotal(c) {
-    return (parseFloat(c.price) || 0) * (parseInt(c.qty) || 0);
-  }
-
-  function calcLandedUSD(c) {
-    const sub = calcSubtotal(c);
-    return isUSRetailer(c.retailer) ? sub * (1 + SHIPPING_UPLIFT) : sub;
-  }
-
-  function calcLandedZAR(c) {
-    if (!fxRate) return 0;
-    return calcLandedUSD(c) / fxRate;
-  }
-
-  function calcDiscount(c) {
-    const msrp = parseFloat(c.msrp);
-    const price = parseFloat(c.price);
-    if (!msrp || !price || msrp <= 0) return null;
-    return ((msrp - price) / msrp) * 100;
-  }
-
-  function calcSticks(c) {
-    const sticksPerPack = parseInt(c.sticksPer) || DEFAULT_STICKS[c.type] || 1;
-    const qty = parseInt(c.qty) || 0;
-    return sticksPerPack * qty;
-  }
-
-  function calcPerStick(c) {
-    const sticks = calcSticks(c);
-    if (!sticks) return 0;
-    return calcLandedUSD(c) / sticks;
-  }
-
-  function ratingScore(rating) {
-    const scores = { 'Legendary': 97, 'Banger': 89, 'Solid': 77, 'Hmm... ok': 59, 'No thanks': 37, 'Dafuk?!': 12 };
-    return scores[rating] || 0;
-  }
-
-  function ratingClass(rating) {
-    if (!rating) return 'unrated';
-    return rating.toLowerCase().replace(/[^a-z]/g, '').replace('ok','').replace('thanks','') ||
-           ({ 'Legendary':'legendary','Banger':'banger','Solid':'solid','Hmm... ok':'hmm','No thanks':'no','Dafuk?!':'dafuk' })[rating] || 'unrated';
-  }
-  // Simpler mapper:
-  function ratingClassClean(rating) {
-    const map = {
-      'Legendary': 'legendary',
-      'Banger': 'banger',
-      'Solid': 'solid',
-      'Hmm... ok': 'hmm',
-      'No thanks': 'no',
-      'Dafuk?!': 'dafuk'
-    };
-    return map[rating] || 'unrated';
-  }
-
-  // ============ FORMAT ============
-  function fmtUSD(v) { return '$' + (v || 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
-  function fmtZAR(v) { return 'R ' + (v || 0).toLocaleString('en-ZA', {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
-
-  // ============ RENDER ============
-  function render() {
-    const container = document.getElementById('cards');
-    const filterStatus = document.getElementById('filter-status').value;
-    const filterRetailer = document.getElementById('filter-retailer').value;
-    const filterRating = document.getElementById('filter-rating').value;
-    const sortBy = document.getElementById('filter-sort').value;
-
-    let filtered = cigars.filter(c => {
-      if (filterStatus !== 'all' && (c.status || 'watching') !== filterStatus) return false;
-      if (filterRetailer !== 'all' && c.retailer !== filterRetailer) return false;
-      if (filterRating !== 'all') {
-        if (filterRating === 'unrated') {
-          if (c.rating) return false;
-        } else if (c.rating !== filterRating) return false;
-      }
+// ============ CONNECTION ============
+function setSyncState(state) {
+  syncState = state;
+  const el = document.getElementById('sync-status');
+  const lbl = document.getElementById('sync-label');
+  if (!el||!lbl) return;
+  el.classList.remove('connecting','synced','saving','offline','pending');
+  lbl.classList.remove('synced','saving','offline','pending');
+  el.classList.add(state); lbl.classList.add(state);
+  const labels={connecting:'Connecting...',synced:'Synced',saving:'Saving...',offline:'Offline',pending:`Pending (${pendingWrites.length})`};
+  lbl.textContent = labels[state]||state;
+}
+function showOfflineBanner(show) { document.getElementById('offline-banner').classList.toggle('active',show); }
+async function checkConnection() {
+  try {
+    const {error} = await db.from('user_settings').select('id').eq('id',1).single();
+    if (!error) {
+      isOnline = true; showOfflineBanner(false); stopReconnectLoop();
+      const [wlRes,cigarsRes] = await Promise.all([
+        db.from('watchlists').select('*').order('created_at',{ascending:false}),
+        db.from('cigars').select('*').order('added_at',{ascending:false})
+      ]);
+      if (!wlRes.error) watchlists = (wlRes.data||[]).map(dbToAppWatchlist);
+      if (!cigarsRes.error) cigars = (cigarsRes.data||[]).map(dbToApp);
+      await cacheLocally();
+      if (activeWatchlist) { const upd=watchlists.find(w=>w.id===activeWatchlist.id); if(upd) activeWatchlist=upd; }
+      if (pendingWrites.length>0) await flushPendingWrites();
+      else { setSyncState('synced'); if(currentView==='home') renderHome(); else render(); }
       return true;
-    });
-
-    filtered.sort((a, b) => {
-      switch (sortBy) {
-        case 'value': {
-          const av = ratingScore(a.rating) * Math.max(0, calcDiscount(a) || 0);
-          const bv = ratingScore(b.rating) * Math.max(0, calcDiscount(b) || 0);
-          return bv - av;
-        }
-        case 'discount': return (calcDiscount(b) || -1) - (calcDiscount(a) || -1);
-        case 'price-asc': return calcLandedUSD(a) - calcLandedUSD(b);
-        case 'price-desc': return calcLandedUSD(b) - calcLandedUSD(a);
-        case 'per-stick': return calcPerStick(a) - calcPerStick(b);
-        default: return (b.added || 0) - (a.added || 0);
-      }
-    });
-
-    document.getElementById('count-badge').textContent = filtered.length + ' of ' + cigars.length + ' shown';
-
-    if (filtered.length === 0) {
-      container.innerHTML = `
-        <div class="empty-state">
-          <h3>${cigars.length === 0 ? 'No cigars on the watchlist yet' : 'No cigars match your filters'}</h3>
-          <p>${cigars.length === 0 ? 'Add your first cigar to start tracking prices and value.' : 'Try adjusting the filters above.'}</p>
-        </div>`;
-      document.getElementById('totals-bar').style.display = 'none';
-    } else {
-      container.innerHTML = filtered.map(c => renderCard(c)).join('');
-      document.getElementById('totals-bar').style.display = 'grid';
     }
+  } catch(e) { isOnline=false; }
+  return false;
+}
+function startReconnectLoop() { if (reconnectInterval) return; reconnectInterval=setInterval(async()=>{ const ok=await checkConnection(); if(ok)stopReconnectLoop(); },30000); }
+function stopReconnectLoop()  { if (reconnectInterval) { clearInterval(reconnectInterval); reconnectInterval=null; } }
+async function manualReconnect() {
+  if (isOnline&&pendingWrites.length===0) { showToast('Already connected'); return; }
+  showToast('Reconnecting...');
+  const ok = await checkConnection();
+  if (!ok) showToast('Still offline. Retrying in background.');
+}
 
-    renderTotals(filtered);
-    updateBudget();
+// ============ FX ============
+async function loadFXRate() {
+  const rateEl=document.getElementById('fx-rate'), timeEl=document.getElementById('fx-time');
+  rateEl.textContent='Loading...';
+  try {
+    const res=await fetch('https://open.er-api.com/v6/latest/ZAR');
+    const data=await res.json();
+    if (data&&data.rates&&data.rates.USD) {
+      fxRate=data.rates.USD;
+      const ts=new Date(data.time_last_update_utc||Date.now());
+      rateEl.textContent='1 USD = R '+(1/fxRate).toFixed(2);
+      timeEl.textContent='Updated '+ts.toLocaleString('en-GB',{timeZone:'Africa/Johannesburg',hour12:false});
+      document.getElementById('total-fx-note').textContent='@ 1 USD = R '+(1/fxRate).toFixed(3);
+      try { await window.storage.set('watchlist-fx',JSON.stringify({rate:fxRate,time:ts.toISOString()})); } catch(e){}
+    } else throw new Error('Invalid response');
+  } catch(e) {
+    try {
+      const cached=await window.storage.get('watchlist-fx');
+      if (cached&&cached.value) { const c=JSON.parse(cached.value); fxRate=c.rate; rateEl.textContent='1 USD = R '+(1/fxRate).toFixed(2); timeEl.textContent='Cached: '+new Date(c.time).toLocaleString('en-GB'); }
+      else { rateEl.textContent='1 USD = R '+(1/fxRate).toFixed(2); timeEl.textContent='Fallback rate'; }
+    } catch(err) { rateEl.textContent='1 USD = R '+(1/fxRate).toFixed(2); timeEl.textContent='Fallback rate'; }
   }
+  if (activeWatchlist) { updateBudget(); render(); }
+}
 
-  function renderCard(c) {
-    const subtotal = calcSubtotal(c);
-    const landedUSD = calcLandedUSD(c);
-    const landedZAR = calcLandedZAR(c);
-    const discount = calcDiscount(c);
-    const sticks = calcSticks(c);
-    const perStick = calcPerStick(c);
-    const ratingCls = ratingClassClean(c.rating);
-    const status = c.status || 'watching';
-    const usFlag = isUSRetailer(c.retailer);
-    const aligned = isAligned(c.rating, c.ccRating);
-    const ccTier = detectTierFromCCRating(c.ccRating);
-    const isPending = pendingRowIds.has(c.id);
+// ============ CALCULATIONS ============
+function isUSRetailer(r) { return US_RETAILERS.includes(r); }
+function calcSubtotal(c)  { return (parseFloat(c.price)||0)*(parseInt(c.qty)||0); }
+function calcLandedUSD(c) { const s=calcSubtotal(c); return isUSRetailer(c.retailer)?s*(1+SHIPPING_UPLIFT):s; }
+function calcLandedZAR(c) { return fxRate?calcLandedUSD(c)/fxRate:0; }
+function calcDiscount(c)  { const m=parseFloat(c.msrp),p=parseFloat(c.price); if(!m||!p||m<=0)return null; return ((m-p)/m)*100; }
+function calcSticks(c)    { return (parseInt(c.sticksPer)||DEFAULT_STICKS[c.type]||1)*(parseInt(c.qty)||0); }
+function calcPerStick(c)  { const s=calcSticks(c); return s?calcLandedUSD(c)/s:0; }
+function ratingScore(r)   { return ({Legendary:97,Banger:89,Solid:77,'Hmm... ok':59,'No thanks':37,'Dafuk?!':12})[r]||0; }
+function ratingClassClean(r){ return ({Legendary:'legendary',Banger:'banger',Solid:'solid','Hmm... ok':'hmm','No thanks':'no','Dafuk?!':'dafuk'})[r]||'unrated'; }
+function fmtUSD(v){ return '$'+(v||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fmtZAR(v){ return 'R '+(v||0).toLocaleString('en-ZA',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function escape(s){ if(s==null)return''; return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
-    const isActive = c.active !== false;
+// ============ VIEW SWITCHING ============
+function goHome() {
+  currentView = 'home'; activeWatchlist = null;
+  document.getElementById('home-view').style.display   = 'block';
+  document.getElementById('detail-view').style.display = 'none';
+  document.getElementById('home-title-block').style.display   = 'block';
+  document.getElementById('detail-title-block').style.display = 'none';
+  document.getElementById('new-watchlist-btn').style.display  = 'inline-flex';
+  renderHome();
+}
+function openWatchlist(id) {
+  activeWatchlist = watchlists.find(w=>w.id===id);
+  if (!activeWatchlist) return;
+  currentView = 'detail';
+  document.getElementById('home-view').style.display   = 'none';
+  document.getElementById('detail-view').style.display = 'block';
+  document.getElementById('home-title-block').style.display   = 'none';
+  document.getElementById('detail-title-block').style.display = 'block';
+  document.getElementById('new-watchlist-btn').style.display  = 'none';
+  document.getElementById('detail-watchlist-name').textContent = activeWatchlist.name;
+  // Populate budget + actual costs inputs
+  document.getElementById('budget-zar').value        = activeWatchlist.budget || '';
+  document.getElementById('f-shipping-usd').value    = activeWatchlist.shippingUSD != null ? activeWatchlist.shippingUSD : '';
+  document.getElementById('f-customs-zar').value     = activeWatchlist.customsZAR  != null ? activeWatchlist.customsZAR  : '';
+  document.getElementById('f-shipping-notes').value  = activeWatchlist.shippingNotes || '';
+  const badge = document.getElementById('shipping-override-badge');
+  if (badge) badge.style.display = activeWatchlist.shippingUSD != null ? 'inline-block' : 'none';
+  // Reset filters
+  document.getElementById('filter-status').value   = 'all';
+  document.getElementById('filter-retailer').value = 'all';
+  document.getElementById('filter-rating').value   = 'all';
+  document.getElementById('filter-sort').value     = 'added-desc';
+  render();
+}
 
-    return `
-      <div class="card status-${status}${isActive ? '' : ' inactive'}">
-        <div class="card-head">
-          <div class="card-title-block">
-            <div class="card-title">${escape(c.cigar || 'Untitled')}${isPending ? '<span class="pending-pill">Pending sync</span>' : ''}</div>
-            <div class="card-meta">
-              <span class="retailer">${escape(c.retailer || '—')}</span>
-              <span>${escape(c.type || '—')}${c.qty > 1 ? ' &times; ' + c.qty : ''}</span>
-              ${sticks ? `<span>${sticks} stick${sticks!==1?'s':''}</span>` : ''}
-              <span class="rating-pill ${ratingCls} ${aligned ? 'aligned' : ''}">${c.rating ? escape(c.rating) : 'Unrated'}</span>
-              ${aligned ? `<span class="alignment-badge">Palates aligned</span>` : ''}
-            </div>
-          </div>
-          <div class="card-actions">
-            <button class="toggle-active-btn ${isActive ? '' : 'is-inactive'}" onclick="toggleActive('${c.id}')" title="${isActive ? 'Exclude from basket' : 'Include in basket'}">${isActive ? 'In basket' : 'Excluded'}</button>
-            <button class="status-pill ${status}" onclick="cycleStatus('${c.id}')" title="Click to change status">${statusLabel(status)}</button>
-            <button class="btn-icon" onclick="editCigar('${c.id}')" title="Edit">&#9998;</button>
-            <button class="btn-icon danger" onclick="deleteCigar('${c.id}')" title="Delete">&times;</button>
-          </div>
-        </div>
-
-        <div class="card-grid">
-          <div class="stat">
-            <span class="stat-label">Unit price</span>
-            <span class="stat-value">${fmtUSD(parseFloat(c.price) || 0)}</span>
-            ${c.msrp ? `<span class="stat-sub">MSRP ${fmtUSD(parseFloat(c.msrp))}</span>` : ''}
-          </div>
-          <div class="stat">
-            <span class="stat-label">Subtotal</span>
-            <span class="stat-value">${fmtUSD(subtotal)}</span>
-            <span class="stat-sub">${c.qty} &times; ${fmtUSD(parseFloat(c.price) || 0)}</span>
-          </div>
-          <div class="stat">
-            <span class="stat-label">Discount</span>
-            <span class="stat-value ${discount !== null && discount > 0 ? 'success' : (discount !== null && discount < 0 ? 'warning' : 'muted')}">
-              ${discount !== null ? (discount > 0 ? '-' : '+') + Math.abs(discount).toFixed(1) + '%' : '—'}
-            </span>
-            <span class="stat-sub">${discount !== null ? 'vs MSRP' : 'no MSRP set'}</span>
-          </div>
-          <div class="stat">
-            <span class="stat-label">Per stick</span>
-            <span class="stat-value">${perStick ? fmtUSD(perStick) : '—'}</span>
-            <span class="stat-sub">landed cost</span>
-          </div>
-          <div class="stat">
-            <span class="stat-label">Landed (USD)</span>
-            <span class="stat-value accent">${fmtUSD(landedUSD)}</span>
-            <span class="stat-sub">${usFlag ? '+30% shipping' : 'incl. shipping'}</span>
-          </div>
-          <div class="stat">
-            <span class="stat-label">Landed (ZAR)</span>
-            <span class="stat-value accent">${fmtZAR(landedZAR)}</span>
-            <span class="stat-sub">at current FX</span>
-          </div>
-        </div>
-
-        <div class="card-extras">
-          <div class="extra-block">
-            <span class="label">Overview</span>
-            <p class="content ${c.overview ? '' : 'empty'}">${c.overview ? escape(c.overview) : 'No overview added yet.'}</p>
-          </div>
-          <div class="extra-block">
-            <span class="label">
-              Cigar Collective
-              ${c.ccLink ? `<a href="${escape(c.ccLink)}" target="_blank" rel="noopener" style="margin-left:8px;color:var(--accent);text-decoration:none;font-size:9px;">[link &#8599;]</a>` : ''}
-            </span>
-            <p class="content ${c.ccRating ? '' : 'empty'}">${c.ccRating ? escape(formatCCRating(c.ccRating)) : 'No rating added yet.'}</p>
-            ${c.notes ? `<span class="label" style="margin-top:6px">Notes</span><p class="content">${escape(c.notes)}</p>` : ''}
-          </div>
+// ============ HOME VIEW ============
+function renderHome() {
+  const grid = document.getElementById('watchlist-grid');
+  if (!watchlists.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><h3>No watchlists yet</h3><p>Create your first watchlist to start tracking cigars.</p></div>`;
+    return;
+  }
+  grid.innerHTML = watchlists.map(renderWatchlistCard).join('');
+}
+function renderWatchlistCard(w) {
+  const wlCigars = cigars.filter(c=>c.watchlistId===w.id && c.active!==false);
+  const allCigars = cigars.filter(c=>c.watchlistId===w.id);
+  const sticks = wlCigars.reduce((s,c)=>s+calcSticks(c),0);
+  let subUSD = wlCigars.reduce((s,c)=>s+calcSubtotal(c),0);
+  let shippingUSD = w.shippingUSD != null ? w.shippingUSD : wlCigars.filter(c=>isUSRetailer(c.retailer)).reduce((s,c)=>s+calcSubtotal(c)*SHIPPING_UPLIFT,0);
+  const landedUSD = subUSD + shippingUSD;
+  const customsZAR = w.customsZAR || 0;
+  const landedZAR  = fxRate ? landedUSD/fxRate + customsZAR : customsZAR;
+  const budgetPct  = w.budget>0 ? Math.min(200,(landedZAR/w.budget)*100) : 0;
+  const statusMap  = {planning:'planning',ordered:'ordered',delivered:'delivered'};
+  const labelMap   = {planning:'Planning',ordered:'Ordered',delivered:'Delivered'};
+  const shippingNote = w.shippingUSD!=null ? `$${w.shippingUSD.toFixed(2)} actual` : (wlCigars.some(c=>isUSRetailer(c.retailer)) ? `~${fmtUSD(shippingUSD)} est.` : 'No US retailers');
+  return `
+    <div class="watchlist-card status-${w.status||'planning'}" onclick="openWatchlist('${w.id}')">
+      <div class="wl-card-head">
+        <div class="wl-card-title">${escape(w.name)}</div>
+        <div class="wl-card-actions" onclick="event.stopPropagation()">
+          <button class="status-pill ${statusMap[w.status]||'planning'}" onclick="cycleWatchlistStatus('${w.id}')">${labelMap[w.status]||'Planning'}</button>
+          <button class="btn-icon" onclick="editWatchlist('${w.id}')" title="Edit">&#9998;</button>
         </div>
       </div>
-    `;
-  }
+      <div class="wl-card-stats">
+        <div class="stat">
+          <span class="stat-label">Items</span>
+          <span class="stat-value">${allCigars.length}</span>
+          <span class="stat-sub">${sticks} stick${sticks!==1?'s':''}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Landed (USD)</span>
+          <span class="stat-value accent">${fmtUSD(landedUSD)}</span>
+          <span class="stat-sub">${shippingNote}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Landed (ZAR)</span>
+          <span class="stat-value accent">${fmtZAR(landedZAR)}</span>
+          ${customsZAR>0?`<span class="stat-sub">incl. ${fmtZAR(customsZAR)} customs</span>`:'<span class="stat-sub">at current FX</span>'}
+        </div>
+        ${w.budget>0?`
+        <div class="stat">
+          <span class="stat-label">Budget</span>
+          <div class="wl-mini-progress"><div class="wl-mini-fill ${budgetPct>100?'over':''}" style="width:${Math.min(100,budgetPct)}%"></div></div>
+          <span class="stat-sub">${budgetPct.toFixed(0)}% of ${fmtZAR(w.budget)}</span>
+        </div>`:''}
+      </div>
+      <div class="wl-card-footer">
+        <span class="wl-card-date">${new Date(w.created).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</span>
+        ${w.notes?`<span class="wl-card-notes">${escape(w.notes)}</span>`:''}
+      </div>
+    </div>`;
+}
+async function cycleWatchlistStatus(id) {
+  const w = watchlists.find(x=>x.id===id);
+  if (!w) return;
+  const next = {planning:'ordered',ordered:'delivered',delivered:'planning'};
+  w.status = next[w.status||'planning'];
+  await dbUpdateWatchlist(w);
+  renderHome();
+}
 
-  function statusLabel(s) {
-    return { watching: 'Watching', ready: 'Ready to buy', bought: 'Bought' }[s] || 'Watching';
-  }
+// ============ BUDGET & ACTUAL COSTS ============
+let budgetSaveTimer = null;
+let actualCostsSaveTimer = null;
 
-  function escape(s) {
-    if (s === null || s === undefined) return '';
-    return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  }
+function onBudgetInput() {
+  if (!activeWatchlist) return;
+  activeWatchlist.budget = parseFloat(document.getElementById('budget-zar').value) || 0;
+  updateBudget();
+  clearTimeout(budgetSaveTimer);
+  budgetSaveTimer = setTimeout(()=>dbUpdateWatchlist(activeWatchlist), 800);
+}
+function onActualCostsInput() {
+  if (!activeWatchlist) return;
+  const sv = document.getElementById('f-shipping-usd').value;
+  const cv = document.getElementById('f-customs-zar').value;
+  activeWatchlist.shippingUSD   = sv!=='' ? parseFloat(sv) : null;
+  activeWatchlist.customsZAR    = cv!=='' ? parseFloat(cv) : null;
+  activeWatchlist.shippingNotes = document.getElementById('f-shipping-notes').value;
+  const badge = document.getElementById('shipping-override-badge');
+  if (badge) badge.style.display = activeWatchlist.shippingUSD!=null ? 'inline-block' : 'none';
+  updateBudget(); render();
+  clearTimeout(actualCostsSaveTimer);
+  actualCostsSaveTimer = setTimeout(()=>dbUpdateWatchlist(activeWatchlist), 800);
+}
+function updateBudget() {
+  if (!activeWatchlist) return;
+  const budget = activeWatchlist.budget || 0;
+  const wlCigars = cigars.filter(c=>c.watchlistId===activeWatchlist.id && c.active!==false);
+  const subUSD = wlCigars.reduce((s,c)=>s+calcSubtotal(c),0);
+  const shippingUSD = activeWatchlist.shippingUSD!=null
+    ? activeWatchlist.shippingUSD
+    : wlCigars.filter(c=>isUSRetailer(c.retailer)).reduce((s,c)=>s+calcSubtotal(c)*SHIPPING_UPLIFT,0);
+  const landedUSD = subUSD + shippingUSD;
+  const customsZAR = activeWatchlist.customsZAR || 0;
+  const landedZAR  = fxRate ? landedUSD/fxRate + customsZAR : customsZAR;
+  const remaining  = budget - landedZAR;
+  const pct = budget>0 ? Math.min(200,(landedZAR/budget)*100) : 0;
+  document.getElementById('spent-display').textContent     = fmtZAR(landedZAR);
+  document.getElementById('remaining-display').textContent = fmtZAR(remaining);
+  document.getElementById('budget-usd').textContent = budget>0&&fxRate ? '= '+fmtUSD(budget*fxRate)+' USD' : '= $0.00 USD';
+  const fill = document.getElementById('progress-fill');
+  fill.style.width = Math.min(100,pct)+'%';
+  fill.classList.toggle('over', pct>100);
+  document.getElementById('progress-pct').textContent = budget>0
+    ? pct.toFixed(0)+'% of budget used'+(pct>100?' (over by '+fmtZAR(Math.abs(remaining))+')')
+    : 'Set a budget to track spending';
+}
 
-  function renderTotals(items) {
-    let subUSD = 0, shipping = 0, sticks = 0;
-    items.filter(c => c.active !== false).forEach(c => {
-      const sub = calcSubtotal(c);
-      subUSD += sub;
-      if (isUSRetailer(c.retailer)) shipping += sub * SHIPPING_UPLIFT;
-      sticks += calcSticks(c);
-    });
-    const landedUSD = subUSD + shipping;
-    const landedZAR = fxRate ? landedUSD / fxRate : 0;
-
-    document.getElementById('total-items').textContent = items.length;
-    document.getElementById('total-sticks').textContent = sticks + ' stick' + (sticks!==1?'s':'');
-    document.getElementById('total-usd').textContent = fmtUSD(subUSD);
-    document.getElementById('total-shipping').textContent = fmtUSD(shipping);
-    document.getElementById('total-landed-usd').textContent = fmtUSD(landedUSD);
-    document.getElementById('total-landed-zar').textContent = fmtZAR(landedZAR);
-    const perCigar = sticks > 0 ? landedZAR / sticks : 0;
-    document.getElementById('total-per-cigar').textContent = perCigar ? fmtZAR(perCigar) : '—';
-  }
-
-  function updateBudget() {
-    const all = cigars.filter(c => c.active !== false);
-    let landedUSD = 0;
-    all.forEach(c => { landedUSD += calcLandedUSD(c); });
-    const landedZAR = fxRate ? landedUSD / fxRate : 0;
-    const remaining = budget - landedZAR;
-    const pct = budget > 0 ? Math.min(200, (landedZAR / budget) * 100) : 0;
-
-    document.getElementById('spent-display').textContent = fmtZAR(landedZAR);
-    document.getElementById('remaining-display').textContent = fmtZAR(remaining);
-    document.getElementById('budget-usd').textContent = budget > 0 && fxRate
-      ? '= ' + fmtUSD(budget * fxRate) + ' USD'
-      : '= $0.00 USD';
-
-    const fill = document.getElementById('progress-fill');
-    fill.style.width = Math.min(100, pct) + '%';
-    fill.classList.toggle('over', pct > 100);
-    document.getElementById('progress-pct').textContent =
-      budget > 0 ? pct.toFixed(0) + '% of budget used' + (pct > 100 ? ' (over by ' + fmtZAR(Math.abs(remaining)) + ')' : '') : 'Set a budget to track spending';
-  }
-
-  // ============ ACTIONS ============
-  function openAddModal() {
-    editingId = null;
-    document.getElementById('modal-title').textContent = 'Add Cigar';
-    document.getElementById('save-btn').textContent = 'Save';
-    clearForm();
-    clearAutoFillState();
-    document.getElementById('modal').classList.add('active');
-  }
-
-  function editCigar(id) {
-    const c = cigars.find(x => x.id === id);
-    if (!c) return;
-    editingId = id;
-    document.getElementById('modal-title').textContent = 'Edit Cigar';
-    document.getElementById('save-btn').textContent = 'Update';
-    document.getElementById('f-cigar').value = c.cigar || '';
-    document.getElementById('f-retailer').value = c.retailer || 'COH Cigars';
-    document.getElementById('f-type').value = c.type || 'Single';
-    document.getElementById('f-sticks-per').value = c.sticksPer || '';
-    document.getElementById('f-qty').value = c.qty || 1;
-    document.getElementById('f-price').value = c.price || '';
-    document.getElementById('f-msrp').value = c.msrp || '';
-    document.getElementById('f-rating').value = c.rating || '';
-    document.getElementById('f-cc-rating').value = c.ccRating || '';
-    document.getElementById('f-cc-link').value = c.ccLink || '';
-    document.getElementById('f-overview').value = c.overview || '';
-    document.getElementById('f-notes').value = c.notes || '';
-    clearAutoFillState();
-    document.getElementById('modal').classList.add('active');
-  }
-
-  function clearForm() {
-    ['f-cigar','f-sticks-per','f-price','f-msrp','f-cc-rating','f-cc-link','f-overview','f-notes'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('f-retailer').value = 'COH Cigars';
-    document.getElementById('f-type').value = 'Single';
-    document.getElementById('f-qty').value = 1;
-    document.getElementById('f-rating').value = '';
-  }
-
-  function closeModal() {
-    document.getElementById('modal').classList.remove('active');
-    editingId = null;
-  }
-
-  async function saveCigar() {
-    const cigar = document.getElementById('f-cigar').value.trim();
-    if (!cigar) { showToast('Cigar name is required'); return; }
-
-    const data = {
-      cigar,
-      retailer: document.getElementById('f-retailer').value,
-      type: document.getElementById('f-type').value,
-      sticksPer: document.getElementById('f-sticks-per').value,
-      qty: parseInt(document.getElementById('f-qty').value) || 1,
-      price: document.getElementById('f-price').value,
-      msrp: document.getElementById('f-msrp').value,
-      rating: document.getElementById('f-rating').value,
-      ccRating: document.getElementById('f-cc-rating').value.trim(),
-      ccLink: document.getElementById('f-cc-link').value.trim(),
-      overview: document.getElementById('f-overview').value.trim(),
-      notes: document.getElementById('f-notes').value.trim()
-    };
-
-    if (editingId) {
-      const idx = cigars.findIndex(c => c.id === editingId);
-      if (idx >= 0) {
-        cigars[idx] = { ...cigars[idx], ...data };
-        await dbUpdateCigar(cigars[idx]);
-      }
-      showToast('Updated');
-    } else {
-      // Generate UUID client-side so optimistic UI works
-      data.id = crypto.randomUUID();
-      data.added = Date.now();
-      data.status = 'watching';
-      cigars.unshift(data); // newest first
-      await dbInsertCigar(data);
-      showToast('Added to watchlist');
+// ============ DETAIL RENDER ============
+function render() {
+  if (!activeWatchlist) return;
+  const container = document.getElementById('cards');
+  const filterStatus   = document.getElementById('filter-status').value;
+  const filterRetailer = document.getElementById('filter-retailer').value;
+  const filterRating   = document.getElementById('filter-rating').value;
+  const sortBy         = document.getElementById('filter-sort').value;
+  const wlCigars = cigars.filter(c=>c.watchlistId===activeWatchlist.id);
+  let filtered = wlCigars.filter(c=>{
+    if (filterStatus!=='all'&&(c.status||'watching')!==filterStatus) return false;
+    if (filterRetailer!=='all'&&c.retailer!==filterRetailer) return false;
+    if (filterRating!=='all') {
+      if (filterRating==='unrated') { if(c.rating)return false; }
+      else if (c.rating!==filterRating) return false;
     }
-
-    closeModal();
-    render();
-  }
-
-  async function deleteCigar(id) {
-    if (!confirm('Remove this cigar from your watchlist?')) return;
-    cigars = cigars.filter(c => c.id !== id);
-    await dbDeleteCigar(id);
-    showToast('Removed');
-    render();
-  }
-
-  async function cycleStatus(id) {
-    const c = cigars.find(x => x.id === id);
-    if (!c) return;
-    const next = { watching: 'ready', ready: 'bought', bought: 'watching' };
-    c.status = next[c.status || 'watching'];
-    await dbUpdateCigar(c);
-    render();
-  }
-
-  async function toggleActive(id) {
-    const c = cigars.find(x => x.id === id);
-    if (!c) return;
-    c.active = c.active === false ? true : false;
-    await dbUpdateCigar(c);
-    render();
-  }
-
-  // Budget input (debounced to avoid spamming Supabase on every keystroke)
-  let budgetSaveTimer = null;
-  document.getElementById('budget-zar').addEventListener('input', (e) => {
-    budget = parseFloat(e.target.value) || 0;
-    updateBudget();
-    clearTimeout(budgetSaveTimer);
-    budgetSaveTimer = setTimeout(async () => {
-      await dbUpdateSettings({ budget_zar: budget });
-    }, 800);
+    return true;
   });
-
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2200);
-  }
-
-  // Close modal on overlay click
-  document.getElementById('modal').addEventListener('click', (e) => {
-    if (e.target.id === 'modal') closeModal();
-  });
-  document.getElementById('settings-modal').addEventListener('click', (e) => {
-    if (e.target.id === 'settings-modal') closeSettingsModal();
-  });
-
-  // ESC to close modal
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeModal();
-      closeSettingsModal();
+  filtered.sort((a,b)=>{
+    switch(sortBy){
+      case 'value':{ const av=ratingScore(a.rating)*Math.max(0,calcDiscount(a)||0); const bv=ratingScore(b.rating)*Math.max(0,calcDiscount(b)||0); return bv-av; }
+      case 'discount': return (calcDiscount(b)||-1)-(calcDiscount(a)||-1);
+      case 'price-asc': return calcLandedUSD(a)-calcLandedUSD(b);
+      case 'price-desc': return calcLandedUSD(b)-calcLandedUSD(a);
+      case 'per-stick': return calcPerStick(a)-calcPerStick(b);
+      default: return (b.added||0)-(a.added||0);
     }
   });
-
-  // ============ RATINGS DATABASE ============
-  async function loadRatingsDB() {
-    if (!dbUrl) {
-      updateDBStatusIndicator('empty', 'Not configured');
-      return;
-    }
-    try {
-      const res = await fetch(dbUrl, { cache: 'no-cache' });
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const data = await res.json();
-      if (!data.ratings || !Array.isArray(data.ratings)) {
-        throw new Error('Invalid schema (missing "ratings" array)');
-      }
-      ratingsDB = {
-        ratings: data.ratings,
-        tier_scale: data.tier_scale || {},
-        version: data.version,
-        source: data.source,
-        lastFetched: new Date().toISOString()
-      };
-      buildFuseIndex();
-      try { await window.storage.set('watchlist-db-cache', JSON.stringify(ratingsDB)); } catch(e) {}
-      updateDBStatusIndicator('success', 'Connected');
-      return true;
-    } catch (e) {
-      updateDBStatusIndicator('error', 'Fetch failed: ' + e.message);
-      return false;
-    }
+  document.getElementById('count-badge').textContent = filtered.length+' of '+wlCigars.length+' shown';
+  if (!filtered.length) {
+    container.innerHTML=`<div class="empty-state"><h3>${wlCigars.length===0?'No cigars in this watchlist yet':'No cigars match your filters'}</h3><p>${wlCigars.length===0?'Click "+ Add Cigar" to start building your list.':'Try adjusting the filters above.'}</p></div>`;
+    document.getElementById('totals-bar').style.display='none';
+  } else {
+    container.innerHTML = filtered.map(renderCard).join('');
+    document.getElementById('totals-bar').style.display='grid';
   }
-
-  function updateDBStatusIndicator(state, msg) {
-    const btn = document.getElementById('settings-btn');
-    btn.classList.remove('has-status', 'error', 'empty');
-    if (state) btn.classList.add('has-status', state);
-
-    const text = document.getElementById('db-status-text');
-    const count = document.getElementById('db-status-count');
-    const time = document.getElementById('db-status-time');
-    if (text) {
-      text.textContent = msg || 'Not configured';
-      text.className = 'db-status-value ' + (state || '');
-    }
-    if (count) count.textContent = (ratingsDB.ratings || []).length;
-    if (time) {
-      time.textContent = ratingsDB.lastFetched
-        ? new Date(ratingsDB.lastFetched).toLocaleString('en-GB', { timeZone: 'Africa/Johannesburg', hour12: false })
-        : 'Never';
-    }
-  }
-
-  // ============ AUTOCOMPLETE (Fuse.js fuzzy matching) ============
-
-  let fuseIndex = null; // rebuilt whenever ratingsDB changes
-
-  function buildFuseIndex() {
-    if (!ratingsDB.ratings || ratingsDB.ratings.length === 0) {
-      fuseIndex = null;
-      return;
-    }
-    fuseIndex = new Fuse(ratingsDB.ratings, {
-      // Fields to search, with relative weights
-      keys: [
-        { name: 'full_name', weight: 3 },
-        { name: 'blend',     weight: 2 },
-        { name: 'brand',     weight: 1.5 },
-        { name: 'vitola',    weight: 1 }
-      ],
-      // Balanced threshold: 0.0 = exact, 1.0 = match anything
-      // 0.4 catches word-order differences, abbreviations, missing words
-      // without drowning in noise
-      threshold: 0.4,
-      // Also handle accented characters (Padrón vs Padron)
-      ignoreLocation: true,
-      includeScore: true,
-      minMatchCharLength: 2,
-      useExtendedSearch: false
-    });
-  }
-
-  // HIGH_CONFIDENCE: score below this (closer to 0 = better in Fuse) triggers auto-fill
-  const HIGH_CONFIDENCE_SCORE = 0.15;
-
-  function onCigarInput() {
-    const input = document.getElementById('f-cigar');
-    const query = input.value.trim();
-    const list = document.getElementById('autocomplete-list');
-
-    // If user edited away from a previously matched value, clear auto-fill state
-    if (currentMatchedRating && input.value !== currentMatchedRating.full_name) {
-      clearAutoFillState();
-    }
-
-    if (!query || query.length < 2 || !fuseIndex) {
-      hideAutocomplete();
-      return;
-    }
-
-    const results = fuseIndex.search(query, { limit: 20 }); // fetch more, we'll trim after logic
-
-    if (results.length === 0) {
-      hideAutocomplete();
-      return;
-    }
-
-    // Only show results within a reasonable score band of the best result
-    // (prevents very weak tail matches polluting the list)
-    const bestScore = results[0].score;
-    const SCORE_BAND = 0.3; // include results within 0.3 of the best score
-    const relevant = results
-      .filter(r => r.score <= bestScore + SCORE_BAND)
-      .slice(0, 10);
-
-    // Auto-fill ONLY when:
-    // 1. Exactly one relevant result exists
-    // 2. It's high confidence (score ≤ 0.15)
-    // 3. No other result is within a 0.2 score gap (i.e. no close siblings)
-    const noCloseSiblings = results.length < 2 || (results[1].score - results[0].score) > 0.2;
-    if (relevant.length === 1 && relevant[0].score <= HIGH_CONFIDENCE_SCORE && noCloseSiblings) {
-      selectResult(relevant[0].item);
-      hideAutocomplete();
-      return;
-    }
-
-    // Multiple results (or single but not confident enough): show dropdown
-    autocompleteHighlight = -1;
-    list.innerHTML = relevant.map((result, i) => {
-      const r = result.item;
-      const fullName = r.full_name || `${r.brand || ''} ${r.blend || ''} ${r.vitola || ''}`.trim();
-      const tier = r.tier || '';
-      const tierLabel = r.tier_label || TIER_TO_USER[tier] || '';
-      const confidence = Math.round((1 - result.score) * 100);
-      return `
-        <div class="autocomplete-item" data-idx="${i}" onmousedown="selectAutocompleteByIdx(${i})">
-          <div class="autocomplete-name">${escape(fullName)}</div>
-          <div class="autocomplete-meta">
-            ${tier ? `<span class="autocomplete-tier-pill">${escape(TIER_DISPLAY[tier] || tier)}</span>` : ''}
-            ${tierLabel ? `<span>${escape(tierLabel)}</span>` : ''}
-            ${r.review_date ? `<span>&middot; ${escape(r.review_date)}</span>` : ''}
-            <span style="margin-left:auto;color:var(--text-muted);font-family:var(--mono-font)">${confidence}% match</span>
+  renderTotals(filtered);
+  updateBudget();
+}
+function renderCard(c) {
+  const subtotal=calcSubtotal(c), landedUSD=calcLandedUSD(c), landedZAR=calcLandedZAR(c);
+  const discount=calcDiscount(c), sticks=calcSticks(c), perStick=calcPerStick(c);
+  const ratingCls=ratingClassClean(c.rating), status=c.status||'watching';
+  const usFlag=isUSRetailer(c.retailer), aligned=isAligned(c.rating,c.ccRating);
+  const isPending=pendingRowIds.has(c.id), isActive=c.active!==false;
+  return `
+    <div class="card status-${status}${isActive?'':' inactive'}">
+      <div class="card-head">
+        <div class="card-title-block">
+          <div class="card-title">${escape(c.cigar||'Untitled')}${isPending?'<span class="pending-pill">Pending sync</span>':''}</div>
+          <div class="card-meta">
+            <span class="retailer">${escape(c.retailer||'—')}</span>
+            <span>${escape(c.type||'—')}${c.qty>1?' &times; '+c.qty:''}</span>
+            ${sticks?`<span>${sticks} stick${sticks!==1?'s':''}</span>`:''}
+            <span class="rating-pill ${ratingCls}${aligned?' aligned':''}">${c.rating?escape(c.rating):'Unrated'}</span>
+            ${aligned?'<span class="alignment-badge">Palates aligned</span>':''}
           </div>
         </div>
-      `;
-    }).join('');
-    list.classList.add('active');
-    list._results = relevant;
+        <div class="card-actions">
+          <button class="toggle-active-btn${isActive?'':' is-inactive'}" onclick="toggleActive('${c.id}')">${isActive?'In basket':'Excluded'}</button>
+          <button class="status-pill ${status}" onclick="cycleStatus('${c.id}')">${statusLabel(status)}</button>
+          <button class="btn-icon" onclick="editCigar('${c.id}')" title="Edit">&#9998;</button>
+          <button class="btn-icon danger" onclick="deleteCigar('${c.id}')" title="Delete">&times;</button>
+        </div>
+      </div>
+      <div class="card-grid">
+        <div class="stat"><span class="stat-label">Unit price</span><span class="stat-value">${fmtUSD(parseFloat(c.price)||0)}</span>${c.msrp?`<span class="stat-sub">MSRP ${fmtUSD(parseFloat(c.msrp))}</span>`:''}</div>
+        <div class="stat"><span class="stat-label">Subtotal</span><span class="stat-value">${fmtUSD(subtotal)}</span><span class="stat-sub">${c.qty} &times; ${fmtUSD(parseFloat(c.price)||0)}</span></div>
+        <div class="stat"><span class="stat-label">Discount</span><span class="stat-value ${discount!=null&&discount>0?'success':(discount!=null&&discount<0?'warning':'muted')}">${discount!=null?(discount>0?'-':'+')+Math.abs(discount).toFixed(1)+'%':'—'}</span><span class="stat-sub">${discount!=null?'vs MSRP':'no MSRP set'}</span></div>
+        <div class="stat"><span class="stat-label">Per stick</span><span class="stat-value">${perStick?fmtUSD(perStick):'—'}</span><span class="stat-sub">landed cost</span></div>
+        <div class="stat"><span class="stat-label">Landed (USD)</span><span class="stat-value accent">${fmtUSD(landedUSD)}</span><span class="stat-sub">${usFlag?'+30% shipping':'incl. shipping'}</span></div>
+        <div class="stat"><span class="stat-label">Landed (ZAR)</span><span class="stat-value accent">${fmtZAR(landedZAR)}</span><span class="stat-sub">at current FX</span></div>
+      </div>
+      <div class="card-extras">
+        <div class="extra-block"><span class="label">Overview</span><p class="content${c.overview?'':' empty'}">${c.overview?escape(c.overview):'No overview added yet.'}</p></div>
+        <div class="extra-block">
+          <span class="label">Cigar Collective${c.ccLink?` <a href="${escape(c.ccLink)}" target="_blank" rel="noopener" style="margin-left:8px;color:var(--accent);text-decoration:none;font-size:9px">[link &#8599;]</a>`:''}</span>
+          <p class="content${c.ccRating?'':' empty'}">${c.ccRating?escape(formatCCRating(c.ccRating)):'No rating added yet.'}</p>
+          ${c.notes?`<span class="label" style="margin-top:6px">Notes</span><p class="content">${escape(c.notes)}</p>`:''}
+        </div>
+      </div>
+    </div>`;
+}
+function statusLabel(s) { return {watching:'Watching',ready:'Ready to buy',bought:'Bought'}[s]||'Watching'; }
+function renderTotals(items) {
+  if (!activeWatchlist) return;
+  let subUSD=0, estShipping=0, sticks=0;
+  items.filter(c=>c.active!==false).forEach(c=>{
+    const sub=calcSubtotal(c); subUSD+=sub;
+    if (isUSRetailer(c.retailer)) estShipping+=sub*SHIPPING_UPLIFT;
+    sticks+=calcSticks(c);
+  });
+  const actualShippingUSD = activeWatchlist.shippingUSD;
+  const shippingUSD = actualShippingUSD!=null ? actualShippingUSD : estShipping;
+  const customsZAR  = activeWatchlist.customsZAR || 0;
+  const landedUSD   = subUSD + shippingUSD;
+  const landedZAR   = fxRate ? landedUSD/fxRate + customsZAR : customsZAR;
+  document.getElementById('total-items').textContent    = items.length;
+  document.getElementById('total-sticks').textContent   = sticks+' stick'+(sticks!==1?'s':'');
+  document.getElementById('total-usd').textContent      = fmtUSD(subUSD);
+  document.getElementById('total-shipping').textContent = fmtUSD(shippingUSD);
+  const subEl = document.getElementById('total-shipping-sub');
+  subEl.textContent = actualShippingUSD!=null ? 'actual' : '30% est. for US';
+  subEl.className   = 'sub'+(actualShippingUSD!=null?' actual':'');
+  document.getElementById('total-customs').textContent     = customsZAR>0 ? fmtZAR(customsZAR) : '—';
+  document.getElementById('total-landed-usd').textContent  = fmtUSD(landedUSD);
+  document.getElementById('total-landed-zar').textContent  = fmtZAR(landedZAR);
+  document.getElementById('total-fx-note').textContent     = fxRate ? '@ 1 USD = R '+(1/fxRate).toFixed(2)+(customsZAR>0?' + customs':'') : 'at current FX';
+  const perCigar = sticks>0 ? landedZAR/sticks : 0;
+  document.getElementById('total-per-cigar').textContent = perCigar ? fmtZAR(perCigar) : '—';
+}
+
+// ============ CIGAR ACTIONS ============
+function openAddModal() {
+  if (!activeWatchlist) return;
+  editingId=null;
+  document.getElementById('modal-title').textContent='Add Cigar';
+  document.getElementById('save-btn').textContent='Save';
+  clearForm(); clearAutoFillState();
+  document.getElementById('modal').classList.add('active');
+}
+function editCigar(id) {
+  const c=cigars.find(x=>x.id===id); if(!c)return;
+  editingId=id;
+  document.getElementById('modal-title').textContent='Edit Cigar';
+  document.getElementById('save-btn').textContent='Update';
+  document.getElementById('f-cigar').value    = c.cigar||'';
+  document.getElementById('f-retailer').value = c.retailer||'COH Cigars';
+  document.getElementById('f-type').value     = c.type||'Single';
+  document.getElementById('f-sticks-per').value=c.sticksPer||'';
+  document.getElementById('f-qty').value      = c.qty||1;
+  document.getElementById('f-price').value    = c.price||'';
+  document.getElementById('f-msrp').value     = c.msrp||'';
+  document.getElementById('f-rating').value   = c.rating||'';
+  document.getElementById('f-cc-rating').value= c.ccRating||'';
+  document.getElementById('f-cc-link').value  = c.ccLink||'';
+  document.getElementById('f-overview').value = c.overview||'';
+  document.getElementById('f-notes').value    = c.notes||'';
+  clearAutoFillState();
+  document.getElementById('modal').classList.add('active');
+}
+function clearForm() {
+  ['f-cigar','f-sticks-per','f-price','f-msrp','f-cc-rating','f-cc-link','f-overview','f-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-retailer').value='COH Cigars';
+  document.getElementById('f-type').value='Single';
+  document.getElementById('f-qty').value=1;
+  document.getElementById('f-rating').value='';
+}
+function closeModal() { document.getElementById('modal').classList.remove('active'); editingId=null; }
+async function saveCigar() {
+  const cigar=document.getElementById('f-cigar').value.trim();
+  if (!cigar) { showToast('Cigar name is required'); return; }
+  const data={
+    cigar, retailer:document.getElementById('f-retailer').value,
+    type:document.getElementById('f-type').value,
+    sticksPer:document.getElementById('f-sticks-per').value,
+    qty:parseInt(document.getElementById('f-qty').value)||1,
+    price:document.getElementById('f-price').value,
+    msrp:document.getElementById('f-msrp').value,
+    rating:document.getElementById('f-rating').value,
+    ccRating:document.getElementById('f-cc-rating').value.trim(),
+    ccLink:document.getElementById('f-cc-link').value.trim(),
+    overview:document.getElementById('f-overview').value.trim(),
+    notes:document.getElementById('f-notes').value.trim()
+  };
+  if (editingId) {
+    const idx=cigars.findIndex(c=>c.id===editingId);
+    if (idx>=0) { cigars[idx]={...cigars[idx],...data}; await dbUpdateCigar(cigars[idx]); }
+    showToast('Updated');
+  } else {
+    data.id=crypto.randomUUID(); data.watchlistId=activeWatchlist.id;
+    data.added=Date.now(); data.status='watching';
+    cigars.unshift(data);
+    await dbInsertCigar(data);
+    showToast('Added to watchlist');
   }
+  closeModal(); render();
+}
+async function deleteCigar(id) {
+  if (!confirm('Remove this cigar?')) return;
+  cigars=cigars.filter(c=>c.id!==id);
+  await dbDeleteCigar(id);
+  showToast('Removed'); render();
+}
+async function cycleStatus(id) {
+  const c=cigars.find(x=>x.id===id); if(!c)return;
+  c.status={watching:'ready',ready:'bought',bought:'watching'}[c.status||'watching'];
+  await dbUpdateCigar(c); render();
+}
+async function toggleActive(id) {
+  const c=cigars.find(x=>x.id===id); if(!c)return;
+  c.active=c.active===false;
+  await dbUpdateCigar(c); render();
+}
 
-  function onCigarKeydown(e) {
-    const list = document.getElementById('autocomplete-list');
-    if (!list.classList.contains('active')) return;
-    const items = list.querySelectorAll('.autocomplete-item');
-    if (!items.length) return;
-
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      autocompleteHighlight = Math.min(items.length - 1, autocompleteHighlight + 1);
-      updateHighlight(items);
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      autocompleteHighlight = Math.max(0, autocompleteHighlight - 1);
-      updateHighlight(items);
-    } else if (e.key === 'Enter' && autocompleteHighlight >= 0) {
-      e.preventDefault();
-      selectAutocompleteByIdx(autocompleteHighlight);
-    } else if (e.key === 'Escape') {
-      hideAutocomplete();
-    }
+// ============ WATCHLIST MODAL ============
+function openNewWatchlistModal() {
+  editingWatchlistId=null;
+  document.getElementById('wl-modal-title').textContent='New Watchlist';
+  document.getElementById('wl-save-btn').textContent='Create';
+  document.getElementById('wl-delete-btn').style.display='none';
+  document.getElementById('wl-name').value='';
+  document.getElementById('wl-status').value='planning';
+  document.getElementById('wl-notes').value='';
+  document.getElementById('watchlist-modal').classList.add('active');
+}
+function editWatchlist(id) {
+  const w=watchlists.find(x=>x.id===id); if(!w)return;
+  editingWatchlistId=id;
+  document.getElementById('wl-modal-title').textContent='Edit Watchlist';
+  document.getElementById('wl-save-btn').textContent='Save';
+  document.getElementById('wl-delete-btn').style.display='inline-flex';
+  document.getElementById('wl-name').value=w.name;
+  document.getElementById('wl-status').value=w.status||'planning';
+  document.getElementById('wl-notes').value=w.notes||'';
+  document.getElementById('watchlist-modal').classList.add('active');
+}
+function editCurrentWatchlist() { if (activeWatchlist) editWatchlist(activeWatchlist.id); }
+function closeWatchlistModal() { document.getElementById('watchlist-modal').classList.remove('active'); editingWatchlistId=null; }
+async function saveWatchlist() {
+  const name=document.getElementById('wl-name').value.trim();
+  if (!name) { showToast('Name is required'); return; }
+  if (editingWatchlistId) {
+    const w=watchlists.find(x=>x.id===editingWatchlistId); if(!w)return;
+    w.name=name; w.status=document.getElementById('wl-status').value; w.notes=document.getElementById('wl-notes').value.trim();
+    await dbUpdateWatchlist(w);
+    if (activeWatchlist&&activeWatchlist.id===editingWatchlistId) document.getElementById('detail-watchlist-name').textContent=w.name;
+    showToast('Updated');
+    if (currentView==='home') renderHome();
+  } else {
+    const w={ id:crypto.randomUUID(), name, status:document.getElementById('wl-status').value, notes:document.getElementById('wl-notes').value.trim(), budget:0, shippingUSD:null, customsZAR:null, shippingNotes:'', created:Date.now() };
+    watchlists.unshift(w);
+    await dbInsertWatchlist(w);
+    showToast('Watchlist created'); renderHome();
   }
+  closeWatchlistModal();
+}
+async function deleteWatchlist(id) {
+  const w=watchlists.find(x=>x.id===id); if(!w)return;
+  const n=cigars.filter(c=>c.watchlistId===id).length;
+  if (!confirm(`Delete "${w.name}"${n>0?' and its '+n+' cigar'+(n!==1?'s':''):''}? This cannot be undone.`)) return;
+  const ok=await dbDeleteWatchlist(id);
+  if (!ok) return;
+  cigars=cigars.filter(c=>c.watchlistId!==id);
+  watchlists=watchlists.filter(x=>x.id!==id);
+  showToast('Watchlist deleted');
+  if (currentView==='detail'&&activeWatchlist&&activeWatchlist.id===id) goHome();
+  else renderHome();
+}
+async function deleteWatchlistFromModal() {
+  if (!editingWatchlistId) return;
+  const id=editingWatchlistId;
+  closeWatchlistModal();
+  await deleteWatchlist(id);
+}
 
-  function updateHighlight(items) {
-    items.forEach((el, i) => el.classList.toggle('highlighted', i === autocompleteHighlight));
-    if (autocompleteHighlight >= 0 && items[autocompleteHighlight]) {
-      items[autocompleteHighlight].scrollIntoView({ block: 'nearest' });
-    }
-  }
+// ============ TOAST & MODAL CLOSE ============
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+document.getElementById('modal').addEventListener('click',e=>{ if(e.target.id==='modal')closeModal(); });
+document.getElementById('settings-modal').addEventListener('click',e=>{ if(e.target.id==='settings-modal')closeSettingsModal(); });
+document.getElementById('watchlist-modal').addEventListener('click',e=>{ if(e.target.id==='watchlist-modal')closeWatchlistModal(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){closeModal();closeSettingsModal();closeWatchlistModal();} });
 
-  function selectAutocompleteByIdx(idx) {
-    const list = document.getElementById('autocomplete-list');
-    const results = list._results || [];
-    if (!results[idx]) return;
-    selectResult(results[idx].item);
-    hideAutocomplete();
-  }
+// ============ RATINGS DB ============
+async function loadRatingsDB() {
+  if (!dbUrl) { updateDBStatusIndicator('empty','Not configured'); return; }
+  try {
+    const res=await fetch(dbUrl,{cache:'no-cache'});
+    if (!res.ok) throw new Error('HTTP '+res.status);
+    const data=await res.json();
+    if (!data.ratings||!Array.isArray(data.ratings)) throw new Error('Invalid schema');
+    ratingsDB={ratings:data.ratings,tier_scale:data.tier_scale||{},version:data.version,source:data.source,lastFetched:new Date().toISOString()};
+    buildFuseIndex();
+    try { await window.storage.set('watchlist-db-cache',JSON.stringify(ratingsDB)); } catch(e){}
+    updateDBStatusIndicator('success','Connected');
+    return true;
+  } catch(e) { updateDBStatusIndicator('error','Fetch failed: '+e.message); return false; }
+}
+function updateDBStatusIndicator(state,msg) {
+  const btn=document.getElementById('settings-btn');
+  btn.classList.remove('has-status','error','empty');
+  if(state)btn.classList.add('has-status',state);
+  const text=document.getElementById('db-status-text');
+  const count=document.getElementById('db-status-count');
+  const time=document.getElementById('db-status-time');
+  if(text){text.textContent=msg||'Not configured';text.className='db-status-value '+(state||'');}
+  if(count)count.textContent=(ratingsDB.ratings||[]).length;
+  if(time)time.textContent=ratingsDB.lastFetched?new Date(ratingsDB.lastFetched).toLocaleString('en-GB',{timeZone:'Africa/Johannesburg',hour12:false}):'Never';
+}
+function buildFuseIndex() {
+  if (!ratingsDB.ratings||!ratingsDB.ratings.length){fuseIndex=null;return;}
+  fuseIndex=new Fuse(ratingsDB.ratings,{keys:[{name:'full_name',weight:3},{name:'blend',weight:2},{name:'brand',weight:1.5},{name:'vitola',weight:1}],threshold:0.4,ignoreLocation:true,includeScore:true,minMatchCharLength:2});
+}
+const HIGH_CONFIDENCE_SCORE=0.15;
+function onCigarInput() {
+  const input=document.getElementById('f-cigar');
+  const query=input.value.trim();
+  const list=document.getElementById('autocomplete-list');
+  if(currentMatchedRating&&input.value!==currentMatchedRating.full_name)clearAutoFillState();
+  if(!query||query.length<2||!fuseIndex){hideAutocomplete();return;}
+  const results=fuseIndex.search(query,{limit:20});
+  if(!results.length){hideAutocomplete();return;}
+  const bestScore=results[0].score;
+  const relevant=results.filter(r=>r.score<=bestScore+0.3).slice(0,10);
+  const noCloseSiblings=results.length<2||(results[1].score-results[0].score)>0.2;
+  if(relevant.length===1&&relevant[0].score<=HIGH_CONFIDENCE_SCORE&&noCloseSiblings){selectResult(relevant[0].item);hideAutocomplete();return;}
+  autocompleteHighlight=-1;
+  list.innerHTML=relevant.map((result,i)=>{
+    const r=result.item;
+    const fullName=r.full_name||`${r.brand||''} ${r.blend||''} ${r.vitola||''}`.trim();
+    const confidence=Math.round((1-result.score)*100);
+    return `<div class="autocomplete-item" data-idx="${i}" onmousedown="selectAutocompleteByIdx(${i})">
+      <div class="autocomplete-name">${escape(fullName)}</div>
+      <div class="autocomplete-meta">
+        ${r.tier?`<span class="autocomplete-tier-pill">${escape(TIER_DISPLAY[r.tier]||r.tier)}</span>`:''}
+        ${r.tier_label?`<span>${escape(r.tier_label)}</span>`:''}
+        ${r.review_date?`<span>&middot; ${escape(r.review_date)}</span>`:''}
+        <span style="margin-left:auto;color:var(--text-muted);font-family:var(--mono-font)">${confidence}% match</span>
+      </div>
+    </div>`;
+  }).join('');
+  list.classList.add('active');
+  list._results=relevant;
+}
+function onCigarKeydown(e) {
+  const list=document.getElementById('autocomplete-list');
+  if(!list.classList.contains('active'))return;
+  const items=list.querySelectorAll('.autocomplete-item');
+  if(!items.length)return;
+  if(e.key==='ArrowDown'){e.preventDefault();autocompleteHighlight=Math.min(items.length-1,autocompleteHighlight+1);updateHighlight(items);}
+  else if(e.key==='ArrowUp'){e.preventDefault();autocompleteHighlight=Math.max(0,autocompleteHighlight-1);updateHighlight(items);}
+  else if(e.key==='Enter'&&autocompleteHighlight>=0){e.preventDefault();selectAutocompleteByIdx(autocompleteHighlight);}
+  else if(e.key==='Escape')hideAutocomplete();
+}
+function updateHighlight(items) {
+  items.forEach((el,i)=>el.classList.toggle('highlighted',i===autocompleteHighlight));
+  if(autocompleteHighlight>=0&&items[autocompleteHighlight])items[autocompleteHighlight].scrollIntoView({block:'nearest'});
+}
+function selectAutocompleteByIdx(idx) {
+  const list=document.getElementById('autocomplete-list');
+  const results=list._results||[];
+  if(!results[idx])return;
+  selectResult(results[idx].item); hideAutocomplete();
+}
+function selectResult(r) {
+  const fullName=r.full_name||`${r.brand||''} ${r.blend||''} ${r.vitola||''}`.trim();
+  document.getElementById('f-cigar').value=fullName;
+  document.getElementById('f-cc-rating').value=r.tier?`${r.tier}${r.tier_label?' ('+r.tier_label+')':''}`:r.tier_label||'';
+  document.getElementById('f-cc-link').value=r.post_url||'';
+  if(r.notes&&!document.getElementById('f-overview').value.trim())document.getElementById('f-overview').value=r.notes;
+  currentMatchedRating=r; setAutoFillIndicators(true);
+}
+function setAutoFillIndicators(on) {
+  ['field-cc-rating','field-cc-link','field-overview'].forEach(id=>{
+    const f=document.getElementById(id); if(!f)return;
+    f.classList.toggle('auto-filled',on);
+    const b=f.querySelector('.field-badge'); if(b)b.style.display=on?'inline-block':'none';
+  });
+  const mb=document.getElementById('match-badge'); if(mb)mb.style.display=on?'inline-block':'none';
+}
+function clearAutoFillState() { currentMatchedRating=null; setAutoFillIndicators(false); }
+function hideAutocomplete() { const l=document.getElementById('autocomplete-list'); if(l)l.classList.remove('active'); autocompleteHighlight=-1; }
 
-  function selectResult(r) {
-    const fullName = r.full_name || `${r.brand || ''} ${r.blend || ''} ${r.vitola || ''}`.trim();
-    document.getElementById('f-cigar').value = fullName;
-    document.getElementById('f-cc-rating').value = r.tier
-      ? `${r.tier}${r.tier_label ? ' (' + r.tier_label + ')' : ''}`
-      : (r.tier_label || '');
-    document.getElementById('f-cc-link').value = r.post_url || '';
-    if (r.notes && !document.getElementById('f-overview').value.trim()) {
-      document.getElementById('f-overview').value = r.notes;
-    }
-    currentMatchedRating = r;
-    setAutoFillIndicators(true);
-  }
+// ============ SETTINGS ============
+function openSettingsModal() {
+  document.getElementById('f-db-url').value=dbUrl||'';
+  updateDBStatusIndicator(
+    dbUrl?(ratingsDB.ratings&&ratingsDB.ratings.length?'success':'error'):'empty',
+    dbUrl?(ratingsDB.ratings&&ratingsDB.ratings.length?'Connected':'Not loaded'):'Not configured'
+  );
+  document.getElementById('settings-modal').classList.add('active');
+}
+function closeSettingsModal() { document.getElementById('settings-modal').classList.remove('active'); }
+async function saveSettings() {
+  const newUrl=document.getElementById('f-db-url').value.trim();
+  const urlChanged=newUrl!==dbUrl;
+  dbUrl=newUrl;
+  try{await window.storage.set('watchlist-db-url',dbUrl);}catch(e){}
+  await dbUpdateSettings({ratings_db_url:dbUrl});
+  if(urlChanged&&dbUrl){showToast('Loading database...');const ok=await loadRatingsDB();if(ok)showToast('Database loaded ('+ratingsDB.ratings.length+' ratings)');}
+  else if(!dbUrl){ratingsDB={ratings:[],tier_scale:{},lastFetched:null};try{await window.storage.delete('watchlist-db-cache');}catch(e){}updateDBStatusIndicator('empty','Not configured');}
+  closeSettingsModal();
+}
+async function reloadDatabase() {
+  if(!dbUrl){showToast('Set a URL first');return;}
+  showToast('Reloading...');
+  const ok=await loadRatingsDB();
+  if(ok)showToast('Reloaded ('+ratingsDB.ratings.length+' ratings)');
+}
 
-  function setAutoFillIndicators(on) {
-    const fields = ['field-cc-rating', 'field-cc-link', 'field-overview'];
-    fields.forEach(id => {
-      const field = document.getElementById(id);
-      if (!field) return;
-      field.classList.toggle('auto-filled', on);
-      const badge = field.querySelector('.field-badge');
-      if (badge) badge.style.display = on ? 'inline-block' : 'none';
-    });
-    const matchBadge = document.getElementById('match-badge');
-    if (matchBadge) matchBadge.style.display = on ? 'inline-block' : 'none';
-  }
+// ============ TIER HELPERS ============
+function detectTierFromCCRating(s){if(!s)return null;const m=s.match(/T[1-6]/i);return m?m[0].toUpperCase():null;}
+function formatCCRating(s){if(!s)return'';const t=detectTierFromCCRating(s);return(t&&TIER_DISPLAY[t])?TIER_DISPLAY[t]:s;}
+function isAligned(userRating,ccRatingStr){if(!userRating||!ccRatingStr)return false;const t=detectTierFromCCRating(ccRatingStr);return t?USER_TO_TIER[userRating]===t:false;}
 
-  function clearAutoFillState() {
-    currentMatchedRating = null;
-    setAutoFillIndicators(false);
-  }
-
-  function hideAutocomplete() {
-    const list = document.getElementById('autocomplete-list');
-    if (list) list.classList.remove('active');
-    autocompleteHighlight = -1;
-  }
-
-  // ============ SETTINGS MODAL ============
-  function openSettingsModal() {
-    document.getElementById('f-db-url').value = dbUrl || '';
-    updateDBStatusIndicator(
-      dbUrl ? (ratingsDB.ratings && ratingsDB.ratings.length ? 'success' : 'error') : 'empty',
-      dbUrl ? (ratingsDB.ratings && ratingsDB.ratings.length ? 'Connected' : 'Not loaded') : 'Not configured'
-    );
-    document.getElementById('settings-modal').classList.add('active');
-  }
-
-  function closeSettingsModal() {
-    document.getElementById('settings-modal').classList.remove('active');
-  }
-
-  async function saveSettings() {
-    const newUrl = document.getElementById('f-db-url').value.trim();
-    const urlChanged = newUrl !== dbUrl;
-    dbUrl = newUrl;
-    try { await window.storage.set('watchlist-db-url', dbUrl); } catch(e) {} // also cache locally
-    await dbUpdateSettings({ ratings_db_url: dbUrl });
-    if (urlChanged && dbUrl) {
-      showToast('Loading database...');
-      const ok = await loadRatingsDB();
-      if (ok) showToast('Database loaded (' + ratingsDB.ratings.length + ' ratings)');
-    } else if (!dbUrl) {
-      ratingsDB = { ratings: [], tier_scale: {}, lastFetched: null };
-      try { await window.storage.delete('watchlist-db-cache'); } catch(e) {}
-      updateDBStatusIndicator('empty', 'Not configured');
-    }
-    closeSettingsModal();
-  }
-
-  async function reloadDatabase() {
-    if (!dbUrl) {
-      showToast('Set a URL first');
-      return;
-    }
-    showToast('Reloading...');
-    const ok = await loadRatingsDB();
-    if (ok) showToast('Reloaded (' + ratingsDB.ratings.length + ' ratings)');
-  }
-
-  // ============ TIER MATCH DETECTION ============
-  function detectTierFromCCRating(ccRatingStr) {
-    if (!ccRatingStr) return null;
-    const match = ccRatingStr.match(/T[1-6]/i);
-    return match ? match[0].toUpperCase() : null;
-  }
-
-  // Convert raw stored CC rating to display string
-  // e.g. "T1" → "S Tier", "T2 (Banger)" → "S Tier", free text stays as-is
-  function formatCCRating(ccRatingStr) {
-    if (!ccRatingStr) return '';
-    const tier = detectTierFromCCRating(ccRatingStr);
-    if (tier && TIER_DISPLAY[tier]) return TIER_DISPLAY[tier];
-    return ccRatingStr; // free-text ratings pass through unchanged
-  }
-
-  function isAligned(userRating, ccRatingStr) {
-    if (!userRating || !ccRatingStr) return false;
-    const ccTier = detectTierFromCCRating(ccRatingStr);
-    if (!ccTier) return false;
-    return USER_TO_TIER[userRating] === ccTier;
-  }
-
-
-  // ============ INIT ============
-  (async function init() {
-    setSyncState('connecting');
-    await loadFXRate();
-    await loadState(); // handles both Supabase load and local cache fallback
-    // Update ratings DB indicator
-    updateDBStatusIndicator(
-      dbUrl ? (ratingsDB.ratings && ratingsDB.ratings.length ? 'success' : 'empty') : 'empty',
-      dbUrl ? (ratingsDB.ratings && ratingsDB.ratings.length ? 'Connected (cached)' : 'Not loaded') : 'Not configured'
-    );
-    if (dbUrl) loadRatingsDB(); // fire-and-forget refresh in background
-    render();
-  })();
+// ============ INIT ============
+(async function init() {
+  setSyncState('connecting');
+  await loadFXRate();
+  await loadState();
+  updateDBStatusIndicator(
+    dbUrl?(ratingsDB.ratings&&ratingsDB.ratings.length?'success':'empty'):'empty',
+    dbUrl?(ratingsDB.ratings&&ratingsDB.ratings.length?'Connected (cached)':'Not loaded'):'Not configured'
+  );
+  if(dbUrl) loadRatingsDB();
+  // Show home view
+  document.getElementById('home-view').style.display='block';
+  document.getElementById('new-watchlist-btn').style.display='inline-flex';
+  renderHome();
+})();
 </script>
 </body>
 </html>
